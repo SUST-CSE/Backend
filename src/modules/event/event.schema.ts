@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Query } from 'mongoose';
 import { IEvent } from './event.interface';
 import { EventCategory, EventStatus } from './event.types';
 
@@ -45,8 +45,13 @@ eventSchema.pre('save', function (next) {
 });
 
 // Filter out deleted events
-eventSchema.pre(/^find/, function (next) {
-  (this as any).find({ isDeleted: { $ne: true } });
+eventSchema.pre('find', function (this: Query<any, IEvent>, next) {
+  this.where({ isDeleted: { $ne: true } });
+  next();
+});
+
+eventSchema.pre('findOne', function (this: Query<any, IEvent>, next) {
+  this.where({ isDeleted: { $ne: true } });
   next();
 });
 
