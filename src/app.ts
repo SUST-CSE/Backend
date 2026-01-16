@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import { env } from './config/env';
 import { errorMiddleware } from './middleware/error.middleware';
 import { NotFoundError } from './utils/errors';
+import { setupSwagger } from './config/swagger';
 
 const app: Application = express();
 
@@ -27,6 +28,9 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
+// Swagger Documentation
+setupSwagger(app);
+
 // API routes
 import router from './routes';
 app.use('/api', router);
@@ -43,8 +47,9 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: 'API is healthy',
+    message: 'SUST CSE Backend is running',
     timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
   });
 });
 
