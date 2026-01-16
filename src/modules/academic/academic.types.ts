@@ -1,0 +1,19 @@
+export enum AcademicLevel {
+  UNDERGRADUATE = 'UNDERGRADUATE',
+  GRADUATE = 'GRADUATE',
+  POSTGRADUATE = 'POSTGRADUATE',
+}
+
+export enum CourseType {
+  THEORY = 'THEORY',
+  LAB = 'LAB',
+  PROJECT = 'PROJECT',
+  THESIS = 'THESIS',
+}
+
+export enum AchievementType {
+  PUBLICATION = 'PUBLICATION',
+  AWARD = 'AWARD',
+  RESEARCH_GRANT = 'RESEARCH_GRANT',
+  CONFERENCE = 'CONFERENCE',
+}

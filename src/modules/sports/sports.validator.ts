@@ -20,7 +20,7 @@ export const createPlayerShowcaseSchema = z.object({
   sportType: z.nativeEnum(SportType),
   achievements: z.array(z.string()).min(1, 'At least one achievement is required'),
   totalMatches: z.number().int().nonnegative().optional(),
-  stats: z.record(z.any()).optional(),
+  stats: z.record(z.string(), z.any()).optional(),
   isFeatured: z.boolean().optional(),
 });
 
