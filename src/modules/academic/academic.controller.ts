@@ -15,12 +15,12 @@ export const getCourses = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateCourse = asyncHandler(async (req: Request, res: Response) => {
-  const result = await AcademicService.updateCourse(req.params.id, req.body);
+  const result = await AcademicService.updateCourse(req.params.id as string, req.body);
   successResponse(res, result, 'Course updated successfully');
 });
 
 export const deleteCourse = asyncHandler(async (req: Request, res: Response) => {
-  await AcademicService.deleteCourse(req.params.id);
+  await AcademicService.deleteCourse(req.params.id as string);
   successResponse(res, null, 'Course deleted successfully');
 });
 

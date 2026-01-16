@@ -15,17 +15,17 @@ export const getEvents = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getEventById = asyncHandler(async (req: Request, res: Response) => {
-  const result = await EventService.getEventById(req.params.id);
+  const result = await EventService.getEventById(req.params.id as string);
   successResponse(res, result, 'Event details fetched successfully');
 });
 
 export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
-  const result = await EventService.updateEvent(req.params.id, req.body, (req.files as Express.Multer.File[]), userId);
+  const result = await EventService.updateEvent(req.params.id as string, req.body, (req.files as Express.Multer.File[]), userId);
   successResponse(res, result, 'Event updated successfully');
 });
 
 export const deleteEvent = asyncHandler(async (req: Request, res: Response) => {
-  await EventService.deleteEvent(req.params.id);
+  await EventService.deleteEvent(req.params.id as string);
   successResponse(res, null, 'Event deleted successfully');
 });

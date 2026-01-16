@@ -1,5 +1,7 @@
 import { AppError } from './AppError';
 
+export { AppError };
+
 export class ValidationError extends AppError {
   constructor(message: string) {
     super(message, 400);

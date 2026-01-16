@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import { Application } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { env } from './env';
@@ -32,7 +32,7 @@ const options: swaggerJsdoc.Options = {
 
 const specs = swaggerJsdoc(options);
 
-export const setupSwagger = (app: Express) => {
+export const setupSwagger = (app: Application) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   console.log('Swagger documentation available at /api-docs');
 };

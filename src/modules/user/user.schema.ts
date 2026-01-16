@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { IUser, IUserMethods, UserModel } from './user.interface';
+import { IUser, IStudent, ITeacher, IUserMethods, UserModel } from './user.interface';
 import { UserRole, UserStatus } from './user.types';
 
 const userSchema = new Schema<IUser, UserModel, IUserMethods>(
@@ -73,7 +73,7 @@ userSchema.pre(/^find/, function (next) {
 export const User = model<IUser, UserModel>('User', userSchema);
 
 // Student Discriminator
-const studentSchema = new Schema<IUser>({
+const studentSchema = new Schema<IStudent>({
   studentId: {
     type: String,
     required: [true, 'Student ID is required'],
@@ -99,7 +99,7 @@ const studentSchema = new Schema<IUser>({
 export const Student = User.discriminator('STUDENT', studentSchema);
 
 // Teacher Discriminator
-const teacherSchema = new Schema<IUser>({
+const teacherSchema = new Schema<ITeacher>({
   employeeId: {
     type: String,
     required: [true, 'Employee ID is required'],

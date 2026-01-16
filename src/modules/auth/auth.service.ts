@@ -10,10 +10,10 @@ export const registerStudent = async (data: any) => {
     throw new ConflictError('User with this email already exists');
   }
 
-  const student = await Student.create({
+  const student = (await Student.create({
     ...data,
     role: UserRole.STUDENT,
-  });
+  })) as any;
 
   const tokens = {
     accessToken: generateAccessToken({
@@ -37,10 +37,10 @@ export const registerTeacher = async (data: any) => {
     throw new ConflictError('User with this email already exists');
   }
 
-  const teacher = await Teacher.create({
+  const teacher = (await Teacher.create({
     ...data,
     role: UserRole.TEACHER,
-  });
+  })) as any;
 
   const tokens = {
     accessToken: generateAccessToken({
@@ -59,7 +59,7 @@ export const registerTeacher = async (data: any) => {
 };
 
 export const loginUser = async (data: any) => {
-  const user = await User.findOne({ email: data.email }).select('+password');
+  const user = (await User.findOne({ email: data.email }).select('+password')) as any;
 
   if (!user || !(await user.comparePassword(data.password))) {
     throw new AuthenticationError('Invalid email or password');

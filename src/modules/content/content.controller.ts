@@ -28,7 +28,7 @@ export const getNotices = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const deleteNotice = asyncHandler(async (req: Request, res: Response) => {
-  await ContentService.deleteNotice(req.params.id);
+  await ContentService.deleteNotice(req.params.id as string);
   successResponse(res, null, 'Notice deleted successfully');
 });
 
@@ -45,6 +45,6 @@ export const getAchievements = asyncHandler(async (req: Request, res: Response) 
 });
 
 export const deleteAchievement = asyncHandler(async (req: Request, res: Response) => {
-  await ContentService.deleteAchievement(req.params.id);
+  await ContentService.deleteAchievement(req.params.id as string);
   successResponse(res, null, 'Achievement deleted successfully');
 });

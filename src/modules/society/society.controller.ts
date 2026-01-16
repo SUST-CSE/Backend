@@ -16,28 +16,28 @@ export const getSocieties = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const getSocietyById = asyncHandler(async (req: Request, res: Response) => {
-  const result = await SocietyService.getSocietyById(req.params.id);
+  const result = await SocietyService.getSocietyById(req.params.id as string);
   successResponse(res, result, 'Society details fetched successfully');
 });
 
 // Members
 export const addMember = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
-  const result = await SocietyService.addMember(req.params.id, req.body, userId);
+  const result = await SocietyService.addMember(req.params.id as string, req.body, userId);
   successResponse(res, result, 'Member added successfully', 201);
 });
 
 export const getMembers = asyncHandler(async (req: Request, res: Response) => {
-  const result = await SocietyService.getSocietyMembers(req.params.id, req.query);
+  const result = await SocietyService.getSocietyMembers(req.params.id as string, req.query);
   successResponse(res, result, 'Society members fetched successfully');
 });
 
 export const updateMember = asyncHandler(async (req: Request, res: Response) => {
-  const result = await SocietyService.updateMember(req.params.memberId, req.body);
+  const result = await SocietyService.updateMember(req.params.memberId as string, req.body);
   successResponse(res, result, 'Member record updated successfully');
 });
 
 export const removeMember = asyncHandler(async (req: Request, res: Response) => {
-  await SocietyService.removeMember(req.params.memberId);
+  await SocietyService.removeMember(req.params.memberId as string);
   successResponse(res, null, 'Member removed successfully');
 });

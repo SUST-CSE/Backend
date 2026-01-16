@@ -16,18 +16,18 @@ export const getTournaments = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getTournamentById = asyncHandler(async (req: Request, res: Response) => {
-  const result = await SportsService.getTournamentById(req.params.id);
+  const result = await SportsService.getTournamentById(req.params.id as string);
   successResponse(res, result, 'Tournament details fetched successfully');
 });
 
 export const updateTournament = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
-  const result = await SportsService.updateTournament(req.params.id, req.body, (req.files as Express.Multer.File[]), userId);
+  const result = await SportsService.updateTournament(req.params.id as string, req.body, (req.files as Express.Multer.File[]), userId);
   successResponse(res, result, 'Tournament updated successfully');
 });
 
 export const deleteTournament = asyncHandler(async (req: Request, res: Response) => {
-  await SportsService.deleteTournament(req.params.id);
+  await SportsService.deleteTournament(req.params.id as string);
   successResponse(res, null, 'Tournament deleted successfully');
 });
 
@@ -44,11 +44,11 @@ export const getPlayerShowcases = asyncHandler(async (req: Request, res: Respons
 });
 
 export const updatePlayerShowcase = asyncHandler(async (req: Request, res: Response) => {
-  const result = await SportsService.updatePlayerShowcase(req.params.id, req.body, req.file as Express.Multer.File);
+  const result = await SportsService.updatePlayerShowcase(req.params.id as string, req.body, req.file as Express.Multer.File);
   successResponse(res, result, 'Player showcase updated successfully');
 });
 
 export const deletePlayerShowcase = asyncHandler(async (req: Request, res: Response) => {
-  await SportsService.deletePlayerShowcase(req.params.id);
+  await SportsService.deletePlayerShowcase(req.params.id as string);
   successResponse(res, null, 'Player showcase removed successfully');
 });

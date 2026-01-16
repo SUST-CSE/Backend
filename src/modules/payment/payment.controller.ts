@@ -24,7 +24,7 @@ export const getAllPayments = asyncHandler(async (req: Request, res: Response) =
 export const getPaymentById = asyncHandler(async (req: Request, res: Response) => {
   const user = (req as any).user;
   const userId = user.role === UserRole.ADMIN ? undefined : user._id;
-  const result = await PaymentService.getPaymentById(req.params.id, userId);
+  const result = await PaymentService.getPaymentById(req.params.id as string, userId);
   successResponse(res, result, 'Payment details fetched successfully');
 });
 
