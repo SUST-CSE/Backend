@@ -5,6 +5,7 @@ import { EventRoutes } from '@/modules/event/event.routes';
 import { SocietyRoutes } from '@/modules/society/society.routes';
 import { SportsRoutes } from '@/modules/sports/sports.routes';
 import { AcademicRoutes } from '@/modules/academic/academic.routes';
+import { PaymentRoutes } from '@/modules/payment/payment.routes';
 
 const router = express.Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: '/academic',
     route: AcademicRoutes,
+  },
+  {
+    path: '/payment',
+    route: PaymentRoutes,
   },
 ];
 

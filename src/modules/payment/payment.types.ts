@@ -1,0 +1,22 @@
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum PaymentCategory {
+  ADMISSION_FEE = 'ADMISSION_FEE',
+  SEMESTER_FEE = 'SEMESTER_FEE',
+  EVENT_REGISTRATION = 'EVENT_REGISTRATION',
+  SOCIETY_FEE = 'SOCIETY_FEE',
+  OTHER = 'OTHER',
+}
+
+export enum PaymentMethod {
+  BKASH = 'BKASH',
+  NAGAD = 'NAGAD',
+  ROCKET = 'ROCKET',
+  CARD = 'CARD',
+  OTHER = 'OTHER',
+}
