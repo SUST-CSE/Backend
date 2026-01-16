@@ -1,0 +1,13 @@
+export enum EventStatus {
+  UPCOMING = 'UPCOMING',
+  ONGOING = 'ONGOING',
+  COMPLETED = 'COMPLETED',
+}
+
+export enum EventCategory {
+  WORKSHOP = 'WORKSHOP',
+  SEMINAR = 'SEMINAR',
+  COMPETITION = 'COMPETITION',
+  SOCIAL = 'SOCIAL',
+  TECHNICAL = 'TECHNICAL',
+}
