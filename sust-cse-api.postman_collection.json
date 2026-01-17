@@ -1,22 +1,21 @@
 {
   "info": {
-    "_postman_id": "sust-cse-backend-ultra",
-    "name": "SUST CSE Department API - ULTRA",
-    "description": "The most complete API collection for SUST CSE Department Website Backend. Includes every route, full bodies, and file upload configurations.",
+    "_postman_id": "sust-cse-backend-definitive",
+    "name": "SUST CSE Department API - DEFINITIVE",
+    "description": "The definitive API collection for SUST CSE Department Website Backend. Includes 100% of routes with detailed request bodies and file upload configurations.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Auth",
+      "name": "01. Auth",
       "item": [
         {
           "name": "Register Student",
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Student Name\",\n  \"email\": \"student@sust.edu\",\n  \"password\": \"password123\",\n  \"phone\": \"01712345678\",\n  \"studentId\": \"2019331001\",\n  \"batch\": \"2019-20\",\n  \"session\": \"2019-20\",\n  \"enrollmentYear\": 2019\n}",
+              "raw": "{\n  \"name\": \"Zubayer Hossain Uday\",\n  \"email\": \"uday@sust.edu\",\n  \"password\": \"password123\",\n  \"phone\": \"01876375141\",\n  \"studentId\": \"2019331001\",\n  \"batch\": \"2019-20\",\n  \"session\": \"2019-20\",\n  \"enrollmentYear\": 2019\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/auth/register/student", "host": ["{{baseUrl}}"], "path": ["auth", "register", "student"] }
@@ -26,10 +25,9 @@
           "name": "Register Teacher",
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Teacher Name\",\n  \"email\": \"teacher@sust.edu\",\n  \"password\": \"password123\",\n  \"phone\": \"01787654321\",\n  \"employeeId\": \"TEA101\",\n  \"designation\": \"Professor\",\n  \"department\": \"Computer Science and Engineering\",\n  \"researchInterests\": [\"AI\", \"Machine Learning\"],\n  \"publications\": [\"Paper 1\", \"Paper 2\"]\n}",
+              "raw": "{\n  \"name\": \"Dr. Md. Abdullah Al Mumin\",\n  \"email\": \"mumin@sust.edu\",\n  \"password\": \"password123\",\n  \"phone\": \"01700000000\",\n  \"employeeId\": \"TEA1234\",\n  \"designation\": \"Professor\",\n  \"department\": \"Computer Science and Engineering\",\n  \"researchInterests\": [\"Machine Learning\", \"Robotics\"],\n  \"publications\": [\"Journal of AI 2024\", \"Conference on Robotics 2023\"]\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/auth/register/teacher", "host": ["{{baseUrl}}"], "path": ["auth", "register", "teacher"] }
@@ -39,7 +37,6 @@
           "name": "Login",
           "request": {
             "method": "POST",
-            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@sust.edu\",\n  \"password\": \"adminpassword123\"\n}",
@@ -49,7 +46,7 @@
           }
         },
         {
-          "name": "Get My Profile",
+          "name": "Get Profile (Me)",
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
@@ -59,7 +56,7 @@
       ]
     },
     {
-      "name": "Content CMS",
+      "name": "02. Content CMS",
       "item": [
         {
           "name": "Get Homepage",
@@ -76,9 +73,9 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "heroTitle", "value": "Engineering Excellence", "type": "text" },
-                { "key": "heroSubtitle", "value": "Welcome to SUST CSE Department", "type": "text" },
-                { "key": "heroImage", "type": "file", "src": [], "description": "Update the main banner image" }
+                { "key": "title", "value": "Welcome to SUST CSE", "type": "text" },
+                { "key": "subtitle", "value": "Innovating the Future of Technology", "type": "text" },
+                { "key": "heroImage", "type": "file", "src": [], "description": "Select the main banner image" }
               ]
             },
             "url": { "raw": "{{baseUrl}}/content/homepage", "host": ["{{baseUrl}}"], "path": ["content", "homepage"] }
@@ -99,10 +96,11 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "Final Exam Schedule", "type": "text" },
+                { "key": "title", "value": "Notice Regarding Class Tests", "type": "text" },
+                { "key": "description", "value": "All students are informed that...", "type": "text" },
                 { "key": "category", "value": "ACADEMIC", "type": "text" },
-                { "key": "content", "value": "The final exams of 4th year 2nd semester will start from...", "type": "text" },
-                { "key": "attachments", "type": "file", "src": [], "description": "PDF or Images of the schedule" }
+                { "key": "isPinned", "value": "true", "type": "text" },
+                { "key": "attachments", "type": "file", "src": [], "description": "PDF or Image files" }
               ]
             },
             "url": { "raw": "{{baseUrl}}/content/notices", "host": ["{{baseUrl}}"], "path": ["content", "notices"] }
@@ -131,10 +129,12 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "1st Prize in ACM ICPC Dhaka", "type": "text" },
-                { "key": "category", "value": "COMPETITION", "type": "text" },
-                { "key": "description", "value": "SUST team won the first runner up position...", "type": "text" },
-                { "key": "images", "type": "file", "src": [], "description": "Multiple images of the achievement" }
+                { "key": "title", "value": "Inter-University Programming Contest Winners", "type": "text" },
+                { "key": "description", "value": "The team 'SUST_Geniuses' won...", "type": "text" },
+                { "key": "achievedBy", "value": "USER_ID", "type": "text" },
+                { "key": "date", "value": "2024-05-20", "type": "text" },
+                { "key": "category", "value": "RESEARCH", "type": "text" },
+                { "key": "images", "type": "file", "src": [] }
               ]
             },
             "url": { "raw": "{{baseUrl}}/content/achievements", "host": ["{{baseUrl}}"], "path": ["content", "achievements"] }
@@ -143,13 +143,20 @@
       ]
     },
     {
-      "name": "Events",
+      "name": "03. Events",
       "item": [
         {
-          "name": "Get Events",
+          "name": "Get All Events",
           "request": {
             "method": "GET",
             "url": { "raw": "{{baseUrl}}/events", "host": ["{{baseUrl}}"], "path": ["events"] }
+          }
+        },
+        {
+          "name": "Get Event By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/events/:id", "host": ["{{baseUrl}}"], "path": ["events", ":id"], "variable": [{ "key": "id", "value": "" }] }
           }
         },
         {
@@ -160,28 +167,61 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "CSE Carnival 2026", "type": "text" },
-                { "key": "category", "value": "CARNIVAL", "type": "text" },
-                { "key": "startDate", "value": "2026-05-15T09:00:00Z", "type": "text" },
-                { "key": "endDate", "value": "2026-05-17T20:00:00Z", "type": "text" },
-                { "key": "venue", "value": "SUST Ground", "type": "text" },
-                { "key": "description", "value": "The biggest tech festival of SUST CSE", "type": "text" },
-                { "key": "images", "type": "file", "src": [], "description": "Event banners and posters" }
+                { "key": "title", "value": "Cloud Computing Workshop", "type": "text" },
+                { "key": "description", "value": "A hands-on workshop on AWS and Google Cloud.", "type": "text" },
+                { "key": "startDate", "value": "2026-04-10T10:00:00Z", "type": "text" },
+                { "key": "endDate", "value": "2026-04-10T18:00:00Z", "type": "text" },
+                { "key": "location", "value": "CSE Lab 1", "type": "text" },
+                { "key": "organizer", "value": "CSE Society", "type": "text" },
+                { "key": "category", "value": "WORKSHOP", "type": "text" },
+                { "key": "registrationLink", "value": "https://example.com/register", "type": "text" },
+                { "key": "maxParticipants", "value": "50", "type": "text" },
+                { "key": "images", "type": "file", "src": [] }
               ]
             },
             "url": { "raw": "{{baseUrl}}/events", "host": ["{{baseUrl}}"], "path": ["events"] }
+          }
+        },
+        {
+          "name": "Update Event (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Updated Workshop Title", "type": "text" },
+                { "key": "images", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/events/:id", "host": ["{{baseUrl}}"], "path": ["events", ":id"], "variable": [{ "key": "id", "value": "" }] }
+          }
+        },
+        {
+          "name": "Delete Event (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/events/:id", "host": ["{{baseUrl}}"], "path": ["events", ":id"], "variable": [{ "key": "id", "value": "" }] }
           }
         }
       ]
     },
     {
-      "name": "Society",
+      "name": "04. Society",
       "item": [
         {
-          "name": "Get Societies",
+          "name": "Get All Societies",
           "request": {
             "method": "GET",
             "url": { "raw": "{{baseUrl}}/society", "host": ["{{baseUrl}}"], "path": ["society"] }
+          }
+        },
+        {
+          "name": "Get Society By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/society/:id", "host": ["{{baseUrl}}"], "path": ["society", ":id"], "variable": [{ "key": "id", "value": "" }] }
           }
         },
         {
@@ -192,9 +232,10 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "name", "value": "SUST CSE Society", "type": "text" },
-                { "key": "category", "value": "ACADEMIC", "type": "text" },
-                { "key": "description", "value": "Official society for CSE students", "type": "text" },
+                { "key": "name", "value": "CSE Sports Club", "type": "text" },
+                { "key": "description", "value": "The club responsible for all sports activities in CSE.", "type": "text" },
+                { "key": "foundedDate", "value": "2015-01-01", "type": "text" },
+                { "key": "category", "value": "SPORTS", "type": "text" },
                 { "key": "logo", "type": "file", "src": [] }
               ]
             },
@@ -202,23 +243,43 @@
           }
         },
         {
-          "name": "Add Society Member (Admin)",
+          "name": "Add Member",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"user\": \"USER_ID_FROM_LOGIN_OR_ME\",\n  \"designation\": \"EXECUTIVE\",\n  \"tenure\": {\n    \"start\": \"2024-01-01\",\n    \"isCurrent\": true\n  }\n}",
+              "raw": "{\n  \"user\": \"USER_ID_HEX\",\n  \"designation\": \"EXECUTIVE\",\n  \"tenureStart\": \"2024-01-01\",\n  \"isCurrent\": true\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/society/:id/members", "host": ["{{baseUrl}}"], "path": ["society", ":id", "members"], "variable": [{ "key": "id", "value": "" }] }
+          }
+        },
+        {
+          "name": "Update Member Record",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"designation\": \"PRESIDENT\",\n  \"tenureEnd\": \"2025-01-01\",\n  \"isCurrent\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/society/members/:memberId", "host": ["{{baseUrl}}"], "path": ["society", "members", ":memberId"], "variable": [{ "key": "memberId", "value": "" }] }
           }
         }
       ]
     },
     {
-      "name": "Sports",
+      "name": "05. Sports",
       "item": [
+        {
+          "name": "Get Tournaments",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/sports/tournaments", "host": ["{{baseUrl}}"], "path": ["sports", "tournaments"] }
+          }
+        },
         {
           "name": "Create Tournament (Admin)",
           "request": {
@@ -227,28 +288,31 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "name", "value": "CSE Cricket Cup 2026", "type": "text" },
-                { "key": "sportType", "value": "CRICKET", "type": "text" },
-                { "key": "startDate", "value": "2026-03-01", "type": "text" },
-                { "key": "endDate", "value": "2026-03-15", "type": "text" },
-                { "key": "venue", "value": "Main Field", "type": "text" },
-                { "key": "images", "type": "file", "src": [], "description": "Tournament poster" }
+                { "key": "name", "value": "CSE Football League", "type": "text" },
+                { "key": "sportType", "value": "FOOTBALL", "type": "text" },
+                { "key": "startDate", "value": "2026-02-10", "type": "text" },
+                { "key": "endDate", "value": "2026-02-25", "type": "text" },
+                { "key": "venue", "value": "Main Stadium", "type": "text" },
+                { "key": "description", "value": "Inter-batch soccer tournament.", "type": "text" },
+                { "key": "images", "type": "file", "src": [] }
               ]
             },
             "url": { "raw": "{{baseUrl}}/sports/tournaments", "host": ["{{baseUrl}}"], "path": ["sports", "tournaments"] }
           }
         },
         {
-          "name": "Add Player to Showcase (Admin)",
+          "name": "Add Player Showcase (Admin)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "name", "value": "Top Performer Name", "type": "text" },
-                { "key": "sportType", "value": "FOOTBALL", "type": "text" },
-                { "key": "achievement", "value": "Top Scorer with 12 goals", "type": "text" },
+                { "key": "user", "value": "USER_ID", "type": "text" },
+                { "key": "sportType", "value": "CRICKET", "type": "text" },
+                { "key": "achievements", "value": "Man of the Match, Hat-trick", "type": "text" },
+                { "key": "totalMatches", "value": "15", "type": "text" },
+                { "key": "isFeatured", "value": "true", "type": "text" },
                 { "key": "image", "type": "file", "src": [] }
               ]
             },
@@ -258,7 +322,7 @@
       ]
     },
     {
-      "name": "Academic",
+      "name": "06. Academic",
       "item": [
         {
           "name": "Create Course (Admin)",
@@ -267,20 +331,38 @@
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"courseCode\": \"CSE432\",\n  \"title\": \"Advanced Software Engineering\",\n  \"credits\": 3,\n  \"type\": \"THEORY\",\n  \"level\": \"UNDERGRADUATE\",\n  \"semester\": 8,\n  \"description\": \"Focuses on modern design patterns and architecture.\"\n}",
+              "raw": "{\n  \"courseCode\": \"CSE133\",\n  \"title\": \"Programming with C\",\n  \"credits\": 3,\n  \"type\": \"THEORY\",\n  \"level\": \"UNDERGRADUATE\",\n  \"semester\": 1,\n  \"description\": \"Fundamentals of structured programming.\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/academic/courses", "host": ["{{baseUrl}}"], "path": ["academic", "courses"] }
           }
         },
         {
-          "name": "Update Academic Stats (Admin)",
+          "name": "Add Academic Achievement",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Dean's Award 2024", "type": "text" },
+                { "key": "type", "value": "AWARD", "type": "text" },
+                { "key": "description", "value": "Received award for exceptional CGPA.", "type": "text" },
+                { "key": "date", "value": "2024-12-01", "type": "text" },
+                { "key": "attachments", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/academic/achievements", "host": ["{{baseUrl}}"], "path": ["academic", "achievements"] }
+          }
+        },
+        {
+          "name": "Update Statistics",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"graduatedStudents\": 1200,\n  \"runningStudents\": 450,\n  \"totalFaculty\": 45,\n  \"totalCourses\": 60\n}",
+              "raw": "{\n  \"label\": \"Placement Rate\",\n  \"value\": \"95%\",\n  \"category\": \"ALUMNI\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/academic/stats", "host": ["{{baseUrl}}"], "path": ["academic", "stats"] }
@@ -289,7 +371,7 @@
       ]
     },
     {
-      "name": "Payments",
+      "name": "07. Payment",
       "item": [
         {
           "name": "Initiate Payment (Student)",
@@ -298,20 +380,20 @@
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amount\": 5000,\n  \"category\": \"SEMESTER_FEE\",\n  \"method\": \"BKASH\",\n  \"description\": \"2019-20 2nd Semester Fee\",\n  \"metadata\": {\n    \"semester\": \"2-2\",\n    \"session\": \"2019-20\"\n  }\n}",
+              "raw": "{\n  \"amount\": 3000,\n  \"category\": \"ADMISSION_FEE\",\n  \"method\": \"BKASH\",\n  \"description\": \"Admission fee for session 2024-25\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/payment/initiate", "host": ["{{baseUrl}}"], "path": ["payment", "initiate"] }
           }
         },
         {
-          "name": "Update Payment Status (Admin Webhook Simulation)",
+          "name": "Update Status (Admin)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transactionId\": \"TRANS_ID_FROM_INITIATE\",\n  \"status\": \"COMPLETED\",\n  \"metadata\": {\n    \"remark\": \"Manually confirmed by admin\"\n  }\n}",
+              "raw": "{\n  \"transactionId\": \"TRANS_ID\",\n  \"status\": \"COMPLETED\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/payment/status-update", "host": ["{{baseUrl}}"], "path": ["payment", "status-update"] }
@@ -322,6 +404,6 @@
   ],
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
-    { "key": "token", "value": "", "type": "string", "description": "Paste the JWT 'accessToken' here after login" }
+    { "key": "token", "value": "PASTE_JWT_TOKEN_HERE", "type": "string" }
   ]
 }
