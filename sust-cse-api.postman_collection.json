@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "sust-cse-backend-total",
-    "name": "SUST CSE Department API - TOTAL",
-    "description": "Total API collection for SUST CSE Department Website Backend with EVERY route and body.",
+    "_postman_id": "sust-cse-backend-ultra",
+    "name": "SUST CSE Department API - ULTRA",
+    "description": "The most complete API collection for SUST CSE Department Website Backend. Includes every route, full bodies, and file upload configurations.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -42,7 +42,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"student@sust.edu\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"email\": \"admin@sust.edu\",\n  \"password\": \"adminpassword123\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
@@ -59,7 +59,7 @@
       ]
     },
     {
-      "name": "Content",
+      "name": "Content CMS",
       "item": [
         {
           "name": "Get Homepage",
@@ -69,16 +69,16 @@
           }
         },
         {
-          "name": "Update Homepage",
+          "name": "Update Homepage (Admin)",
           "request": {
             "method": "PUT",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "heroTitle", "value": "New Title", "type": "text" },
-                { "key": "heroSubtitle", "value": "New Subtitle", "type": "text" },
-                { "key": "heroImage", "type": "file", "src": [] }
+                { "key": "heroTitle", "value": "Engineering Excellence", "type": "text" },
+                { "key": "heroSubtitle", "value": "Welcome to SUST CSE Department", "type": "text" },
+                { "key": "heroImage", "type": "file", "src": [], "description": "Update the main banner image" }
               ]
             },
             "url": { "raw": "{{baseUrl}}/content/homepage", "host": ["{{baseUrl}}"], "path": ["content", "homepage"] }
@@ -92,24 +92,24 @@
           }
         },
         {
-          "name": "Create Notice",
+          "name": "Create Notice (Admin)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "Notice Title", "type": "text" },
+                { "key": "title", "value": "Final Exam Schedule", "type": "text" },
                 { "key": "category", "value": "ACADEMIC", "type": "text" },
-                { "key": "content", "value": "Notice description...", "type": "text" },
-                { "key": "attachments", "type": "file", "src": [] }
+                { "key": "content", "value": "The final exams of 4th year 2nd semester will start from...", "type": "text" },
+                { "key": "attachments", "type": "file", "src": [], "description": "PDF or Images of the schedule" }
               ]
             },
             "url": { "raw": "{{baseUrl}}/content/notices", "host": ["{{baseUrl}}"], "path": ["content", "notices"] }
           }
         },
         {
-          "name": "Delete Notice",
+          "name": "Delete Notice (Admin)",
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
@@ -124,28 +124,20 @@
           }
         },
         {
-          "name": "Create Achievement",
+          "name": "Create Achievement (Admin/Teacher)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "Ach Title", "type": "text" },
-                { "key": "category", "value": "RESEARCH", "type": "text" },
-                { "key": "description", "value": "Ach description...", "type": "text" },
-                { "key": "images", "type": "file", "src": [] }
+                { "key": "title", "value": "1st Prize in ACM ICPC Dhaka", "type": "text" },
+                { "key": "category", "value": "COMPETITION", "type": "text" },
+                { "key": "description", "value": "SUST team won the first runner up position...", "type": "text" },
+                { "key": "images", "type": "file", "src": [], "description": "Multiple images of the achievement" }
               ]
             },
             "url": { "raw": "{{baseUrl}}/content/achievements", "host": ["{{baseUrl}}"], "path": ["content", "achievements"] }
-          }
-        },
-        {
-          "name": "Delete Achievement",
-          "request": {
-            "method": "DELETE",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-            "url": { "raw": "{{baseUrl}}/content/achievements/:id", "host": ["{{baseUrl}}"], "path": ["content", "achievements", ":id"], "variable": [{ "key": "id", "value": "" }] }
           }
         }
       ]
@@ -154,34 +146,27 @@
       "name": "Events",
       "item": [
         {
-          "name": "Get All Events",
+          "name": "Get Events",
           "request": {
             "method": "GET",
             "url": { "raw": "{{baseUrl}}/events", "host": ["{{baseUrl}}"], "path": ["events"] }
           }
         },
         {
-          "name": "Get Event By ID",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "{{baseUrl}}/events/:id", "host": ["{{baseUrl}}"], "path": ["events", ":id"], "variable": [{ "key": "id", "value": "" }] }
-          }
-        },
-        {
-          "name": "Create Event",
+          "name": "Create Event (Admin)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "Event", "type": "text" },
-                { "key": "category", "value": "WORKSHOP", "type": "text" },
-                { "key": "startDate", "value": "2026-06-01", "type": "text" },
-                { "key": "endDate", "value": "2026-06-02", "type": "text" },
-                { "key": "venue", "value": "Seminar Room", "type": "text" },
-                { "key": "description", "value": "Desc", "type": "text" },
-                { "key": "images", "type": "file", "src": [] }
+                { "key": "title", "value": "CSE Carnival 2026", "type": "text" },
+                { "key": "category", "value": "CARNIVAL", "type": "text" },
+                { "key": "startDate", "value": "2026-05-15T09:00:00Z", "type": "text" },
+                { "key": "endDate", "value": "2026-05-17T20:00:00Z", "type": "text" },
+                { "key": "venue", "value": "SUST Ground", "type": "text" },
+                { "key": "description", "value": "The biggest tech festival of SUST CSE", "type": "text" },
+                { "key": "images", "type": "file", "src": [], "description": "Event banners and posters" }
               ]
             },
             "url": { "raw": "{{baseUrl}}/events", "host": ["{{baseUrl}}"], "path": ["events"] }
@@ -200,20 +185,74 @@
           }
         },
         {
-          "name": "Create Society",
+          "name": "Create Society (Admin)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "name", "value": "Society Name", "type": "text" },
-                { "key": "category", "value": "CULTURAL", "type": "text" },
-                { "key": "description", "value": "Society Desc", "type": "text" },
+                { "key": "name", "value": "SUST CSE Society", "type": "text" },
+                { "key": "category", "value": "ACADEMIC", "type": "text" },
+                { "key": "description", "value": "Official society for CSE students", "type": "text" },
                 { "key": "logo", "type": "file", "src": [] }
               ]
             },
             "url": { "raw": "{{baseUrl}}/society", "host": ["{{baseUrl}}"], "path": ["society"] }
+          }
+        },
+        {
+          "name": "Add Society Member (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"USER_ID_FROM_LOGIN_OR_ME\",\n  \"designation\": \"EXECUTIVE\",\n  \"tenure\": {\n    \"start\": \"2024-01-01\",\n    \"isCurrent\": true\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/society/:id/members", "host": ["{{baseUrl}}"], "path": ["society", ":id", "members"], "variable": [{ "key": "id", "value": "" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sports",
+      "item": [
+        {
+          "name": "Create Tournament (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "CSE Cricket Cup 2026", "type": "text" },
+                { "key": "sportType", "value": "CRICKET", "type": "text" },
+                { "key": "startDate", "value": "2026-03-01", "type": "text" },
+                { "key": "endDate", "value": "2026-03-15", "type": "text" },
+                { "key": "venue", "value": "Main Field", "type": "text" },
+                { "key": "images", "type": "file", "src": [], "description": "Tournament poster" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/sports/tournaments", "host": ["{{baseUrl}}"], "path": ["sports", "tournaments"] }
+          }
+        },
+        {
+          "name": "Add Player to Showcase (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Top Performer Name", "type": "text" },
+                { "key": "sportType", "value": "FOOTBALL", "type": "text" },
+                { "key": "achievement", "value": "Top Scorer with 12 goals", "type": "text" },
+                { "key": "image", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/sports/players", "host": ["{{baseUrl}}"], "path": ["sports", "players"] }
           }
         }
       ]
@@ -222,57 +261,60 @@
       "name": "Academic",
       "item": [
         {
-          "name": "Get Courses",
-          "request": {
-            "method": "GET",
-            "url": { "raw": "{{baseUrl}}/academic/courses", "host": ["{{baseUrl}}"], "path": ["academic", "courses"] }
-          }
-        },
-        {
-          "name": "Create Course",
+          "name": "Create Course (Admin)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"courseCode\": \"CSEXXX\",\n  \"title\": \"Course Title\",\n  \"credits\": 3,\n  \"type\": \"THEORY\",\n  \"level\": \"UNDERGRADUATE\",\n  \"semester\": 1,\n  \"description\": \"Desc\"\n}",
+              "raw": "{\n  \"courseCode\": \"CSE432\",\n  \"title\": \"Advanced Software Engineering\",\n  \"credits\": 3,\n  \"type\": \"THEORY\",\n  \"level\": \"UNDERGRADUATE\",\n  \"semester\": 8,\n  \"description\": \"Focuses on modern design patterns and architecture.\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/academic/courses", "host": ["{{baseUrl}}"], "path": ["academic", "courses"] }
+          }
+        },
+        {
+          "name": "Update Academic Stats (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"graduatedStudents\": 1200,\n  \"runningStudents\": 450,\n  \"totalFaculty\": 45,\n  \"totalCourses\": 60\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/academic/stats", "host": ["{{baseUrl}}"], "path": ["academic", "stats"] }
           }
         }
       ]
     },
     {
-      "name": "Payment",
+      "name": "Payments",
       "item": [
         {
-          "name": "My Payments",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-            "url": { "raw": "{{baseUrl}}/payment/my", "host": ["{{baseUrl}}"], "path": ["payment", "my"] }
-          }
-        },
-        {
-          "name": "All Payments",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-            "url": { "raw": "{{baseUrl}}/payment/all", "host": ["{{baseUrl}}"], "path": ["payment", "all"] }
-          }
-        },
-        {
-          "name": "Initiate Payment",
+          "name": "Initiate Payment (Student)",
           "request": {
             "method": "POST",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amount\": 1000,\n  \"category\": \"EVENT_REGISTRATION\",\n  \"method\": \"BKASH\",\n  \"description\": \"Payment for carnival\"\n}",
+              "raw": "{\n  \"amount\": 5000,\n  \"category\": \"SEMESTER_FEE\",\n  \"method\": \"BKASH\",\n  \"description\": \"2019-20 2nd Semester Fee\",\n  \"metadata\": {\n    \"semester\": \"2-2\",\n    \"session\": \"2019-20\"\n  }\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": { "raw": "{{baseUrl}}/payment/initiate", "host": ["{{baseUrl}}"], "path": ["payment", "initiate"] }
+          }
+        },
+        {
+          "name": "Update Payment Status (Admin Webhook Simulation)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"TRANS_ID_FROM_INITIATE\",\n  \"status\": \"COMPLETED\",\n  \"metadata\": {\n    \"remark\": \"Manually confirmed by admin\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{baseUrl}}/payment/status-update", "host": ["{{baseUrl}}"], "path": ["payment", "status-update"] }
           }
         }
       ]
@@ -280,6 +322,6 @@
   ],
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
-    { "key": "token", "value": "", "type": "string" }
+    { "key": "token", "value": "", "type": "string", "description": "Paste the JWT 'accessToken' here after login" }
   ]
 }
