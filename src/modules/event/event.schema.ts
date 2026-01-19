@@ -7,6 +7,7 @@ const eventSchema = new Schema<IEvent>(
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true },
     images: [String],
+    attachments: [String],
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     status: {

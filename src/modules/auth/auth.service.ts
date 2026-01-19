@@ -2,7 +2,7 @@ import { Student, Teacher, User } from '@/modules/user/user.schema';
 import { IUser } from '@/modules/user/user.interface';
 import { AppError, AuthenticationError, ConflictError } from '@/utils/errors';
 import { generateAccessToken, generateRefreshToken } from '@/utils/jwt.util';
-import { UserRole } from '@/modules/user/user.types';
+import { UserRole, UserStatus } from '@/modules/user/user.types';
 
 export const registerStudent = async (data: any) => {
   const isExist = await User.findOne({ email: data.email });
@@ -40,6 +40,7 @@ export const registerTeacher = async (data: any) => {
   const teacher = (await Teacher.create({
     ...data,
     role: UserRole.TEACHER,
+    status: UserStatus.PENDING,
   })) as any;
 
   const tokens = {

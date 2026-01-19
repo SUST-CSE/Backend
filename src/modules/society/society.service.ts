@@ -26,13 +26,32 @@ export const getSocietyById = async (id: string) => {
   return society;
 };
 
+export const updateSociety = async (id: string, data: any, file: Express.Multer.File | undefined) => {
+  let updates = { ...data };
+  if (file) {
+    const { url } = await uploadToCloudinary(file, 'sust-cse/societies');
+    updates.logo = url;
+  }
+  
+  const society = await Society.findByIdAndUpdate(id, updates, { new: true });
+  if (!society) throw new NotFoundError('Society not found');
+  return society;
+};
+
 // Members
-export const addMember = async (societyId: string, data: any, userId: string) => {
+export const addMember = async (societyId: string, data: any, file: Express.Multer.File | undefined, userId: string) => {
   const society = await Society.findById(societyId);
   if (!society) throw new NotFoundError('Society not found');
 
+  let imageUrl;
+  if (file) {
+    const { url } = await uploadToCloudinary(file, 'sust-cse/societies/members');
+    imageUrl = url;
+  }
+
   return await SocietyMember.create({
     ...data,
+    image: imageUrl,
     society: societyId,
     createdBy: userId,
   });
@@ -43,7 +62,7 @@ export const getSocietyMembers = async (societyId: string, query: any) => {
   if (query.isCurrent !== undefined) filter.isCurrent = query.isCurrent === 'true';
 
   return await SocietyMember.find(filter)
-    .populate('user', 'name email studentId profileImage phone')
+    .populate('user', 'name email studentId profileImage phone role designation')
     .sort({ tenureStart: -1 });
 };
 

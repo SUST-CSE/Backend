@@ -6,6 +6,8 @@ import { SocietyRoutes } from '@/modules/society/society.routes';
 import { SportsRoutes } from '@/modules/sports/sports.routes';
 import { AcademicRoutes } from '@/modules/academic/academic.routes';
 import { PaymentRoutes } from '@/modules/payment/payment.routes';
+import { UserRoutes } from '@/modules/user/user.routes';
+import { BlogRoutes } from '@/modules/blog/blog.routes';
 
 const router = express.Router();
 
@@ -37,6 +39,14 @@ const moduleRoutes = [
   {
     path: '/payment',
     route: PaymentRoutes,
+  },
+  {
+    path: '/blogs',
+    route: BlogRoutes,
+  },
+  {
+    path: '/users',
+    route: UserRoutes,
   },
 ];
 

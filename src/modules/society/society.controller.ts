@@ -20,10 +20,26 @@ export const getSocietyById = asyncHandler(async (req: Request, res: Response) =
   successResponse(res, result, 'Society details fetched successfully');
 });
 
+export const updateSociety = asyncHandler(async (req: Request, res: Response) => {
+  const result = await SocietyService.updateSociety(req.params.id as string, req.body, req.file as Express.Multer.File | undefined);
+  successResponse(res, result, 'Society updated successfully');
+});
+
 // Members
 export const addMember = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
-  const result = await SocietyService.addMember(req.params.id as string, req.body, userId);
+  const { id } = req.params; // Extract id from params
+  const { session, ...restBody } = req.body; // Extract session and rest of body
+  const result = await SocietyService.addMember(
+    id as string,
+    {
+      ...restBody,
+      user: req.body.user,
+      session: session
+    },
+    req.file, // Pass the file object correctly
+    userId
+  );
   successResponse(res, result, 'Member added successfully', 201);
 });
 

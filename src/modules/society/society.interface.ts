@@ -25,7 +25,9 @@ export interface ISocietyMember {
   tenureStart: Date;
   tenureEnd?: Date;
   isCurrent: boolean;
+  session: string;
   achievements: string[];
+  image?: string; // Optional custom image for the member
   createdBy: Types.ObjectId;
   isDeleted: boolean;
 }

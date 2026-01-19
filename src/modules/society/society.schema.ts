@@ -38,7 +38,9 @@ const societyMemberSchema = new Schema<ISocietyMember>(
     tenureStart: { type: Date, required: true },
     tenureEnd: { type: Date },
     isCurrent: { type: Boolean, default: true },
+    session: { type: String, required: true }, // Academic session e.g., "2021-22"
     achievements: [String],
+    image: { type: String }, // Optional custom image for the member
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     isDeleted: { type: Boolean, default: false },
   },

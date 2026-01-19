@@ -11,7 +11,9 @@ export const noticeSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   publishDate: z.string().optional(),
   expiryDate: z.string().optional(),
-  isPinned: z.boolean().optional(),
+  isPinned: z.union([z.boolean(), z.string()])
+    .transform((val) => val === 'true' || val === true)
+    .optional(),
   category: z.nativeEnum(NoticeCategory),
 });
 

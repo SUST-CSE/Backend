@@ -26,3 +26,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
   
   successResponse(res, user, 'User profile fetched successfully');
 });
+
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  successResponse(res, null, 'User logged out successfully');
+});

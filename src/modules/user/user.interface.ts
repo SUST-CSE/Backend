@@ -24,7 +24,6 @@ export interface IStudent extends IUser {
 }
 
 export interface ITeacher extends IUser {
-  employeeId: string;
   designation: string;
   department: string;
   researchInterests: string[];

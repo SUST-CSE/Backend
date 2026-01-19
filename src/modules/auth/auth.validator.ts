@@ -15,8 +15,14 @@ export const registerStudentSchema = registerBaseSchema.extend({
   enrollmentYear: z.number().int().min(2000),
 });
 
-export const registerTeacherSchema = registerBaseSchema.extend({
-  employeeId: z.string().min(5, 'Employee ID is required'),
+export const registerTeacherSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address').refine(
+    (email) => email.endsWith('@gmail.com'),
+    'Teachers must use a Gmail address'
+  ),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  phone: z.string().regex(/^(?:\+88|88)?(01[3-9]\d{8})$/, 'Invalid Bangladesh phone number'),
   designation: z.string().min(2, 'Designation is required'),
   researchInterests: z.array(z.string()).optional(),
   publications: z.array(z.string()).optional(),

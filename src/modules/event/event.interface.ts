@@ -6,6 +6,7 @@ export interface IEvent {
   title: string;
   description: string;
   images: string[];
+  attachments?: string[];
   startDate: Date;
   endDate: Date;
   status: EventStatus;

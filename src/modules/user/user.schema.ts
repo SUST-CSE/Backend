@@ -100,11 +100,6 @@ export const Student = User.discriminator('STUDENT', studentSchema);
 
 // Teacher Discriminator
 const teacherSchema = new Schema<ITeacher>({
-  employeeId: {
-    type: String,
-    required: [true, 'Employee ID is required'],
-    unique: true,
-  },
   designation: {
     type: String,
     required: [true, 'Designation is required'],

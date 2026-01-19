@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from 'cloudinary';
+import cloudinary from '@/config/cloudinary';
 import { AppError } from './errors/AppError';
 
 export const uploadToCloudinary = async (
@@ -7,7 +7,7 @@ export const uploadToCloudinary = async (
 ): Promise<{ url: string; public_id: string }> => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder },
+      { folder, resource_type: 'auto' },
       (error, result) => {
         if (error) return reject(new AppError('Cloudinary upload failed', 500));
         resolve({

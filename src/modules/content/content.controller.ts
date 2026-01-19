@@ -27,6 +27,11 @@ export const getNotices = asyncHandler(async (req: Request, res: Response) => {
   successResponse(res, result, 'Notices fetched successfully');
 });
 
+export const getNoticeById = asyncHandler(async (req: Request, res: Response) => {
+  const result = await ContentService.getNoticeById(req.params.id as string);
+  successResponse(res, result, 'Notice details fetched successfully');
+});
+
 export const deleteNotice = asyncHandler(async (req: Request, res: Response) => {
   await ContentService.deleteNotice(req.params.id as string);
   successResponse(res, null, 'Notice deleted successfully');

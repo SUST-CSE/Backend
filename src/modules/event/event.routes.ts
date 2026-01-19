@@ -9,12 +9,17 @@ import { upload } from '@/middleware/upload.middleware';
 const router = express.Router();
 
 router.get('/', EventController.getEvents);
+router.get('/upcoming', EventController.getUpcomingEvents);
+router.get('/ongoing', EventController.getOngoingEvents);
 router.get('/:id', EventController.getEventById);
 
 router.post(
   '/',
   auth(UserRole.ADMIN),
-  upload.array('images', 10),
+  upload.fields([
+    { name: 'images', maxCount: 10 },
+    { name: 'attachments', maxCount: 10 }
+  ]),
   validate(createEventSchema),
   EventController.createEvent
 );
@@ -22,7 +27,10 @@ router.post(
 router.put(
   '/:id',
   auth(UserRole.ADMIN),
-  upload.array('images', 10),
+  upload.fields([
+    { name: 'images', maxCount: 10 },
+    { name: 'attachments', maxCount: 10 }
+  ]),
   validate(updateEventSchema),
   EventController.updateEvent
 );

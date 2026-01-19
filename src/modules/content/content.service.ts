@@ -57,6 +57,12 @@ export const deleteNotice = async (id: string) => {
   return notice;
 };
 
+export const getNoticeById = async (id: string) => {
+  const notice = await Notice.findById(id).populate('createdBy', 'name email');
+  if (!notice) throw new NotFoundError('Notice not found');
+  return notice;
+};
+
 // Achievements
 export const createAchievement = async (data: any, files: Express.Multer.File[], userId: string) => {
   const images = [];

@@ -17,9 +17,16 @@ export const addMemberSchema = z.object({
   user: z.string().min(1, 'User ID is required'),
   designation: z.nativeEnum(MemberDesignation),
   tenureStart: z.string().min(1, 'Tenure start date is required'),
-  tenureEnd: z.string().optional(),
-  isCurrent: z.boolean().default(true),
+  tenureEnd: z.string().optional().or(z.literal('')),
+  isCurrent: z.union([z.boolean(), z.string()])
+    .transform((val) => {
+      if (val === 'true') return true;
+      if (val === 'false') return false;
+      return val === true;
+    })
+    .default(true),
   achievements: z.array(z.string()).optional(),
+  session: z.string().min(1, 'Session is required'), // Added session to match updated requirements
 });
 
 export const updateSocietySchema = createSocietySchema.partial();

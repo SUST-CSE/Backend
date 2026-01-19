@@ -20,6 +20,7 @@ router.put(
 
 // Notices
 router.get('/notices', ContentController.getNotices);
+router.get('/notices/:id', ContentController.getNoticeById);
 router.post(
   '/notices',
   auth(UserRole.ADMIN),

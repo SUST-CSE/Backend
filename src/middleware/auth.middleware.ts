@@ -39,8 +39,8 @@ export const auth = (...roles: UserRole[]) => {
       // Grant access to protected route
       (req as any).user = currentUser;
       next();
-    } catch (error) {
-      throw new AuthenticationError('Invalid token or token expired.');
+    } catch (error: any) {
+      throw new AuthenticationError(`Invalid token or token expired. Details: ${error.message}`);
     }
   });
 };

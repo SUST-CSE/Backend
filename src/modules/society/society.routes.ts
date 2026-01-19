@@ -20,11 +20,20 @@ router.post(
   SocietyController.createSociety
 );
 
+router.patch(
+  '/:id',
+  auth(UserRole.ADMIN),
+  upload.single('logo'),
+  validate(updateSocietySchema),
+  SocietyController.updateSociety
+);
+
 // Members
 router.get('/:id/members', SocietyController.getMembers);
 router.post(
   ('/:id/members'),
   auth(UserRole.ADMIN),
+  upload.single('image'), // Enable image upload
   validate(addMemberSchema),
   SocietyController.addMember
 );

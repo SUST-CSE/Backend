@@ -3,18 +3,29 @@ import { uploadToCloudinary } from '@/utils/cloudinary.util';
 import { NotFoundError } from '@/utils/errors';
 import { EventStatus } from './event.types';
 
-export const createEvent = async (data: any, files: Express.Multer.File[], userId: string) => {
+export const createEvent = async (data: any, files: { [fieldname: string]: Express.Multer.File[] } | undefined, userId: string) => {
   const images = [];
-  if (files && files.length > 0) {
-    for (const file of files) {
-      const { url } = await uploadToCloudinary(file, 'sust-cse/events');
-      images.push(url);
+  const attachments = [];
+
+  if (files) {
+    if (files['images']) {
+      for (const file of files['images']) {
+        const { url } = await uploadToCloudinary(file, 'sust-cse/events/images');
+        images.push(url);
+      }
+    }
+    if (files['attachments']) {
+      for (const file of files['attachments']) {
+        const { url } = await uploadToCloudinary(file, 'sust-cse/events/attachments');
+        attachments.push(url);
+      }
     }
   }
 
   return await Event.create({
     ...data,
     images,
+    attachments,
     createdBy: userId,
   });
 };
@@ -46,19 +57,29 @@ export const getEventById = async (id: string) => {
   return event;
 };
 
-export const updateEvent = async (id: string, data: any, files: Express.Multer.File[] | undefined, userId: string) => {
+export const updateEvent = async (id: string, data: any, files: { [fieldname: string]: Express.Multer.File[] } | undefined, userId: string) => {
   const event = await Event.findById(id);
   if (!event) throw new NotFoundError('Event not found');
 
   const updateData = { ...data };
 
-  if (files && files.length > 0) {
-    const images = [];
-    for (const file of files) {
-      const { url } = await uploadToCloudinary(file, 'sust-cse/events');
-      images.push(url);
+  if (files) {
+    if (files['images']) {
+      const images = [];
+      for (const file of files['images']) {
+        const { url } = await uploadToCloudinary(file, 'sust-cse/events/images');
+        images.push(url);
+      }
+      updateData.images = [...(event.images || []), ...images];
     }
-    updateData.images = [...(event.images || []), ...images];
+    if (files['attachments']) {
+      const attachments = [];
+      for (const file of files['attachments']) {
+        const { url } = await uploadToCloudinary(file, 'sust-cse/events/attachments');
+        attachments.push(url);
+      }
+      updateData.attachments = [...(event.attachments || []), ...attachments];
+    }
   }
 
   return await Event.findByIdAndUpdate(id, updateData, { new: true });

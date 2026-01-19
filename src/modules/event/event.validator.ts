@@ -10,8 +10,11 @@ export const createEventSchema = z.object({
   organizer: z.string().min(1, 'Organizer is required'),
   category: z.nativeEnum(EventCategory),
   registrationLink: z.string().url('Invalid URL').optional(),
-  maxParticipants: z.number().int().positive().optional(),
-  isFeatured: z.boolean().optional(),
+  maxParticipants: z.preprocess((val) => (val ? parseInt(val as string, 10) : undefined), z.number().int().positive().optional()),
+  isFeatured: z.union([z.boolean(), z.string()])
+    .transform((val) => val === 'true' || val === true)
+    .optional(),
+  attachments: z.any().array().optional(),
 });
 
 export const updateEventSchema = createEventSchema.partial();
