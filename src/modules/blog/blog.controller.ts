@@ -2,12 +2,43 @@ import { Request, Response } from 'express';
 import * as BlogService from './blog.service';
 import { asyncHandler } from '@/utils/asyncHandler.util';
 import { successResponse } from '@/utils/response.util';
+import { uploadToCloudinary } from '@/utils/cloudinary.util';
+import { AppError } from '@/utils/errors';
 
-export const createBlog = asyncHandler(async (req: Request, res: Response) => {
-  const blog = await BlogService.createBlog({
+  // Upload image to Cloudinary if provided
+  if (req.file) {
+    const { secure_url } = await uploadToCloudinary(req.file, 'sust-cse/blogs');
+    imageUrl = secure_url;
+  }
+
+  // Parse tags if they come as a string from FormData
+  let tags = req.body.tags || [];
+  if (typeof tags === 'string') {
+    tags = tags.split(',').map((tag: string) => tag.trim()).filter(Boolean);
+  }
+
+  // Check if user is authenticated
+  const user = (req as any).user;
+  
+  const blogData: any = {
     ...req.body,
-    author: (req as any).user._id,
-  });
+    tags,
+    image: imageUrl || undefined,
+  };
+
+  if (user) {
+    // Authenticated user
+    blogData.author = user._id;
+  } else {
+    // Guest user - require name and email
+    if (!req.body.guestName || !req.body.guestEmail) {
+      throw new AppError('Guest users must provide name and email', 400);
+    }
+    blogData.guestName = req.body.guestName;
+    blogData.guestEmail = req.body.guestEmail;
+  }
+
+  const blog = await BlogService.createBlog(blogData);
   successResponse(res, blog, 'Blog post submitted for verification', 201);
 });
 

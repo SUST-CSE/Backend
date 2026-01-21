@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { IUser, IStudent, ITeacher, IUserMethods, UserModel } from './user.interface';
 import { UserRole, UserStatus } from './user.types';
 
-const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -54,6 +54,10 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    notificationPreferences: {
+      notices: { type: [String], default: [] },
+      events: { type: [String], default: [] },
     },
   },
   {

@@ -5,7 +5,9 @@ const blogSchema = new Schema<IBlog>(
   {
     title: { type: String, required: true, trim: true },
     content: { type: String, required: true },
-    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    author: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+    guestName: { type: String },
+    guestEmail: { type: String },
     category: { type: String, required: true },
     status: {
       type: String,
@@ -13,6 +15,7 @@ const blogSchema = new Schema<IBlog>(
       default: BlogStatus.PENDING,
     },
     tags: [{ type: String }],
+    image: { type: String },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }

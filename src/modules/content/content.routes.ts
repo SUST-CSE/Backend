@@ -23,7 +23,7 @@ router.get('/notices', ContentController.getNotices);
 router.get('/notices/:id', ContentController.getNoticeById);
 router.post(
   '/notices',
-  auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN, UserRole.STUDENT),
   upload.array('attachments', 5),
   validate(noticeSchema),
   ContentController.createNotice

@@ -32,7 +32,10 @@ export const auth = (...roles: UserRole[]) => {
       }
 
       // 5. Check if user has required role
+      console.log(`🔒 Auth Check: User ${currentUser.email} (${currentUser.role}) accessing route requiring [${roles.join(', ')}]`);
+      
       if (roles.length > 0 && !roles.includes(currentUser.role)) {
+        console.warn(`🚫 Access Denied: User role ${currentUser.role} not in allowed list [${roles.join(', ')}]`);
         throw new AuthorizationError();
       }
 

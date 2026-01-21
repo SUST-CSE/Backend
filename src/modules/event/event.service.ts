@@ -2,6 +2,7 @@ import { Event } from './event.schema';
 import { uploadToCloudinary } from '@/utils/cloudinary.util';
 import { NotFoundError } from '@/utils/errors';
 import { EventStatus } from './event.types';
+import { notifyInterestedUsers } from '@/utils/notification.util';
 
 export const createEvent = async (data: any, files: { [fieldname: string]: Express.Multer.File[] } | undefined, userId: string) => {
   const images = [];
@@ -22,12 +23,23 @@ export const createEvent = async (data: any, files: { [fieldname: string]: Expre
     }
   }
 
-  return await Event.create({
+  const event = await Event.create({
     ...data,
     images,
     attachments,
     createdBy: userId,
   });
+
+  // Notify interested users
+  const notificationResult = await notifyInterestedUsers('event', event.category, { 
+    title: event.title, 
+    id: (event._id as any).toString() 
+  });
+
+  return {
+    ...event.toObject(),
+    notificationResult
+  };
 };
 
 export const getAllEvents = async (query: any) => {

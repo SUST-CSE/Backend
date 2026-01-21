@@ -14,6 +14,10 @@ export interface IUser {
   verificationCode?: string;
   verificationCodeExpires?: Date;
   isDeleted: boolean;
+  notificationPreferences?: {
+    notices: string[];
+    events: string[];
+  };
   createdAt: Date;
   updatedAt: Date;
 }

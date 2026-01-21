@@ -4,6 +4,7 @@ import { validate } from '@/middleware/validate.middleware';
 import { createBlogSchema, updateBlogStatusSchema } from './blog.validator';
 import { auth } from '@/middleware/auth.middleware';
 import { UserRole } from '@/modules/user/user.types';
+import { upload } from '@/middleware/upload.middleware';
 
 const router = express.Router();
 
@@ -14,8 +15,7 @@ router.get('/:id', BlogController.getBlogById);
 
 router.post(
   '/',
-  auth(UserRole.STUDENT, UserRole.TEACHER, UserRole.ADMIN),
-  validate(createBlogSchema),
+  upload.single('image'),
   BlogController.createBlog
 );
 

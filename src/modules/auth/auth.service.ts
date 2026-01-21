@@ -95,27 +95,38 @@ export const loginUser = async (data: any) => {
 };
 
 export const verifyEmail = async (email: string, code: string) => {
+  console.log(`🔍 Attempting email verification for: ${email} with code: ${code}`);
   const user = (await User.findOne({ email }).select('+verificationCode +verificationCodeExpires')) as any;
 
   if (!user) {
+    console.warn(`❌ Verification failed: User not found for email ${email}`);
     throw new AppError('User not found', 404);
   }
 
   if (user.isEmailVerified) {
+    console.warn(`❌ Verification failed: Email already verified for ${email}`);
     throw new AppError('Email is already verified', 400);
   }
 
   if (!user.verificationCode || !user.verificationCodeExpires) {
+    console.warn(`❌ Verification failed: No code/expiry found for ${email}`);
     throw new AppError('No verification code found. Please request a new one.', 400);
   }
 
+  console.log(`📊 DB Code: ${user.verificationCode}, Input Code: ${code}`);
+  console.log(`⏰ Code Expires: ${user.verificationCodeExpires}, Current Time: ${new Date()}`);
+
   if (user.verificationCodeExpires < new Date()) {
+    console.warn(`❌ Verification failed: Code expired for ${email}`);
     throw new AppError('Verification code has expired. Please request a new one.', 400);
   }
 
   if (user.verificationCode !== code) {
+    console.warn(`❌ Verification failed: Code mismatch for ${email}. Expected ${user.verificationCode}, got ${code}`);
     throw new AppError('Invalid verification code', 400);
   }
+
+  console.log(`✅ Verification successful for ${email}`);
 
   user.isEmailVerified = true;
   user.verificationCode = undefined;

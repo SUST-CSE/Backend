@@ -9,10 +9,13 @@ export enum BlogStatus {
 export interface IBlog extends Document {
   title: string;
   content: string;
-  author: Schema.Types.ObjectId;
+  author?: Schema.Types.ObjectId;
+  guestName?: string;
+  guestEmail?: string;
   category: string;
   status: BlogStatus;
   tags: string[];
+  image?: string;
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;

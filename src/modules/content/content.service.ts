@@ -2,6 +2,7 @@ import { HomePage, Notice, Achievement } from './content.schema';
 import { uploadToCloudinary } from '@/utils/cloudinary.util';
 import { Types } from 'mongoose';
 import { NotFoundError } from '@/utils/errors';
+import { notifyInterestedUsers } from '@/utils/notification.util';
 
 // HomePage
 export const getHomePage = async () => {
@@ -39,11 +40,22 @@ export const createNotice = async (data: any, files: Express.Multer.File[], user
     }
   }
 
-  return await Notice.create({
+  const notice = await Notice.create({
     ...data,
     attachments,
     createdBy: userId,
   });
+
+  // Notify interested users
+  const notificationResult = await notifyInterestedUsers('notice', notice.category, {
+    title: notice.title,
+    id: (notice._id as any).toString()
+  });
+
+  return {
+    ...notice.toObject(),
+    notificationResult
+  };
 };
 
 export const getAllNotices = async (filters: any) => {

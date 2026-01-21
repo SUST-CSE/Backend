@@ -21,7 +21,7 @@ export const createAlumni = asyncHandler(async (req: Request, res: Response) => 
 
   // Handle profile image upload
   if (req.file) {
-    const uploadResult = await uploadToCloudinary(req.file);
+    const uploadResult = await uploadToCloudinary(req.file, 'alumni');
     data.profileImage = uploadResult.secure_url;
   }
 
@@ -35,7 +35,7 @@ export const updateAlumni = asyncHandler(async (req: Request, res: Response) => 
 
   // Handle profile image upload
   if (req.file) {
-    const uploadResult = await uploadToCloudinary(req.file);
+    const uploadResult = await uploadToCloudinary(req.file, 'alumni');
     data.profileImage = uploadResult.secure_url;
   }
 

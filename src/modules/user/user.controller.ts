@@ -49,15 +49,32 @@ export const updateMyProfile = asyncHandler(async (req: Request, res: Response) 
   const user = (req as any).user;
   const updates = req.body;
 
+  console.log('>>> UPDATE PROFILE START <<<');
+  console.log('User ID from Auth:', user?._id);
+  
+  if (!user?._id) {
+    throw new AppError('Authentication failed: user ID missing', 401);
+  }
+
+  // Handle nested objects that might be stringified in FormData
+  if (typeof updates.notificationPreferences === 'string') {
+    try {
+      updates.notificationPreferences = JSON.parse(updates.notificationPreferences);
+    } catch (e) {
+      console.error('Error parsing notificationPreferences:', e);
+    }
+  }
+
   // Handle profile image upload
   if (req.file) {
+    console.log('📸 Uploading image...');
     const uploadResult = await uploadToCloudinary(req.file, 'profiles');
     updates.profileImage = uploadResult.secure_url;
   }
 
   // Prevent updating sensitive fields
   const sanitizedUpdates: any = {};
-  const allowedFields = ['name', 'phone', 'profileImage', 'designation', 'researchInterests', 'publications', 'cgpa'];
+  const allowedFields = ['name', 'phone', 'profileImage', 'designation', 'researchInterests', 'publications', 'cgpa', 'notificationPreferences'];
   
   Object.keys(updates).forEach((key) => {
     if (allowedFields.includes(key)) {
@@ -65,16 +82,26 @@ export const updateMyProfile = asyncHandler(async (req: Request, res: Response) 
     }
   });
 
+  console.log('📝 Updates to apply:', JSON.stringify(sanitizedUpdates));
+
+  // Use findByIdAndUpdate with explicit string ID to avoid any casting issues
   const updatedUser = await User.findByIdAndUpdate(
-    user.userId,
-    sanitizedUpdates,
+    user._id.toString(),
+    { $set: sanitizedUpdates },
     { new: true, runValidators: true }
   );
 
   if (!updatedUser) {
-    throw new AppError('User not found', 404);
+    console.error('❌ User not found in DB with ID:', user._id.toString());
+    // Try one more time bypassing filters
+    const rawUser = await User.findOne({ _id: user._id }).setOptions({ skipMiddleware: true });
+    if (rawUser) {
+      console.log('⚠️ User found only when bypassing middleware!');
+    }
+    throw new AppError('User not found in database', 404);
   }
 
+  console.log('✅ Update successful for:', updatedUser.email);
   successResponse(res, updatedUser, 'Profile updated successfully');
 });
 

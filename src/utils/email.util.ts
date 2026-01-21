@@ -1,11 +1,11 @@
 import nodemailer from 'nodemailer';
 import { env } from '@/config/env';
 
-// Create reusable transporter using Gmail SMTP
+// Create reusable transporter using dynamic SMTP config
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465, // Use 465 for SSL or 587 for TLS
-  secure: true, // true for 465, false for other ports
+  host: env.EMAIL_HOST,
+  port: parseInt(env.EMAIL_PORT),
+  secure: env.EMAIL_PORT === '465', // true for 465, false for 587 (STARTTLS)
   auth: {
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS.replace(/\s/g, ''), // Remove any spaces from app password
@@ -43,5 +43,20 @@ export const sendVerificationEmail = async (email: string, code: string) => {
   } catch (err) {
     console.error('❌ Email sending error:', err);
     throw new Error('Failed to send verification email');
+  }
+};
+
+export const sendEmail = async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
+  try {
+    const info = await transporter.sendMail({
+      from: `"SUST CSE Department" <${env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    });
+    return info;
+  } catch (error) {
+    console.error('❌ Email sending error:', error);
+    throw error;
   }
 };

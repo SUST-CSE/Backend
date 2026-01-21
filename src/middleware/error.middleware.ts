@@ -12,6 +12,9 @@ export const errorMiddleware = (
   err.status = err.status || 'error';
 
   if (env.NODE_ENV === 'development') {
+    console.error(`❌ [${err.statusCode}] ${err.message}`);
+    if (err.statusCode === 400) console.error('Details:', err);
+    
     res.status(err.statusCode).json({
       success: false,
       error: err,
