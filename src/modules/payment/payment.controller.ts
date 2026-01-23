@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
 import * as PaymentService from './payment.service';
-import { UserRole } from '@/modules/user/user.types';
+import { UserRole } from '../../modules/user/user.types';
 
 export const initiatePayment = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;

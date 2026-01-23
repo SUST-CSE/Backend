@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
 import * as AuthService from './auth.service';
 
 export const registerStudent = asyncHandler(async (req: Request, res: Response) => {

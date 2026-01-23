@@ -1,9 +1,9 @@
-import { Student, Teacher, User } from '@/modules/user/user.schema';
-import { IUser } from '@/modules/user/user.interface';
-import { AppError, AuthenticationError, ConflictError } from '@/utils/errors';
-import { generateAccessToken, generateRefreshToken } from '@/utils/jwt.util';
-import { UserRole, UserStatus } from '@/modules/user/user.types';
-import { sendVerificationEmail } from '@/utils/email.util';
+import { Student, Teacher, User } from '../../modules/user/user.schema';
+import { IUser } from '../../modules/user/user.interface';
+import { AppError, AuthenticationError, ConflictError } from '../../utils/errors';
+import { generateAccessToken, generateRefreshToken } from '../../utils/jwt.util';
+import { UserRole, UserStatus } from '../../modules/user/user.types';
+import { sendVerificationEmail } from '../../utils/email.util';
 import crypto from 'crypto';
 
 const generateVerificationCode = (): string => {

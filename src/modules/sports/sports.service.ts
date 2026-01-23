@@ -1,6 +1,6 @@
 import { Tournament, PlayerShowcase } from './sports.schema';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
-import { NotFoundError } from '@/utils/errors';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
+import { NotFoundError } from '../../utils/errors';
 
 // Tournaments
 export const createTournament = async (data: any, files: Express.Multer.File[], userId: string) => {

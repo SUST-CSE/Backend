@@ -1,8 +1,8 @@
 import express from 'express';
 import * as AuthController from './auth.controller';
-import { validate } from '@/middleware/validate.middleware';
+import { validate } from '../../middleware/validate.middleware';
 import * as AuthValidator from './auth.validator';
-import { auth } from '@/middleware/auth.middleware';
+import { auth } from '../../middleware/auth.middleware';
 
 const router = express.Router();
 console.log('✅ Auth Routes Module Loaded');

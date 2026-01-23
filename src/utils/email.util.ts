@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { env } from '@/config/env';
+import { env } from '../config/env';
 
 // Create reusable transporter using dynamic SMTP config
 const transporter = nodemailer.createTransport({

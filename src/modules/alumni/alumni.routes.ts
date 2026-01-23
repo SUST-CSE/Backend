@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 import * as AlumniController from './alumni.controller';
-import { auth } from '@/middleware/auth.middleware';
-import { upload } from '@/middleware/upload.middleware';
-import { validate } from '@/middleware/validate.middleware';
+import { auth } from '../../middleware/auth.middleware';
+import { upload } from '../../middleware/upload.middleware';
+import { validate } from '../../middleware/validate.middleware';
 import { createAlumniSchema, updateAlumniSchema } from './alumni.validator';
-import { UserRole } from '@/modules/user/user.types';
+import { UserRole } from '../../modules/user/user.types';
 
 const router = Router();
 

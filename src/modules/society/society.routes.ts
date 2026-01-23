@@ -1,10 +1,10 @@
 import express from 'express';
 import * as SocietyController from './society.controller';
-import { validate } from '@/middleware/validate.middleware';
+import { validate } from '../../middleware/validate.middleware';
 import { createSocietySchema, addMemberSchema, updateSocietySchema, updateMemberSchema } from './society.validator';
-import { auth } from '@/middleware/auth.middleware';
-import { UserRole } from '@/modules/user/user.types';
-import { upload } from '@/middleware/upload.middleware';
+import { auth } from '../../middleware/auth.middleware';
+import { UserRole } from '../../modules/user/user.types';
+import { upload } from '../../middleware/upload.middleware';
 
 const router = express.Router();
 

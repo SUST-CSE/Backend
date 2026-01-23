@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import * as BlogService from './blog.service';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
-import { AppError } from '@/utils/errors';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
+import { AppError } from '../../utils/errors';
 
 export const createBlog = asyncHandler(async (req: Request, res: Response) => {
   let imageUrl = '';

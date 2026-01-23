@@ -1,10 +1,10 @@
 import express from 'express';
 import * as SportsController from './sports.controller';
-import { validate } from '@/middleware/validate.middleware';
+import { validate } from '../../middleware/validate.middleware';
 import { createTournamentSchema, updateTournamentSchema, createPlayerShowcaseSchema, updatePlayerShowcaseSchema } from './sports.validator';
-import { auth } from '@/middleware/auth.middleware';
-import { UserRole } from '@/modules/user/user.types';
-import { upload } from '@/middleware/upload.middleware';
+import { auth } from '../../middleware/auth.middleware';
+import { UserRole } from '../../modules/user/user.types';
+import { upload } from '../../middleware/upload.middleware';
 
 const router = express.Router();
 

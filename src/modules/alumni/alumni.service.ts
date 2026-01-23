@@ -1,5 +1,5 @@
 import { Alumni } from './alumni.schema';
-import { AppError } from '@/utils/errors';
+import { AppError } from '../../utils/errors';
 import { Student, User } from '../user/user.schema';
 
 const calculateBatch = (session: string) => {

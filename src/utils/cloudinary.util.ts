@@ -1,4 +1,4 @@
-import cloudinary from '@/config/cloudinary';
+import cloudinary from '../config/cloudinary';
 import { AppError } from './errors/AppError';
 
 export const uploadToCloudinary = async (

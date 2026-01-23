@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { AuthenticationError, AuthorizationError } from '@/utils/errors';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { verifyToken } from '@/utils/jwt.util';
-import { env } from '@/config/env';
-import { User } from '@/modules/user/user.schema';
-import { UserRole } from '@/modules/user/user.types';
+import { AuthenticationError, AuthorizationError } from '../utils/errors';
+import { asyncHandler } from '../utils/asyncHandler.util';
+import { verifyToken } from '../utils/jwt.util';
+import { env } from '../config/env';
+import { User } from '../modules/user/user.schema';
+import { UserRole } from '../modules/user/user.types';
 
 export const auth = (...roles: UserRole[]) => {
   return asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

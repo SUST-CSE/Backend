@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
 import * as ContentService from './content.service';
 import { User } from '../user/user.schema';
 import { UserRole } from '../user/user.types';
-import { sendEmail } from '@/utils/email.util';
+import { sendEmail } from '../../utils/email.util';
 
 // HomePage
 export const getHomePage = asyncHandler(async (req: Request, res: Response) => {

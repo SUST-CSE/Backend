@@ -1,10 +1,10 @@
 import express from 'express';
 import * as ContentController from './content.controller';
-import { validate } from '@/middleware/validate.middleware';
+import { validate } from '../../middleware/validate.middleware';
 import { homePageSchema, noticeSchema, achievementSchema } from './content.validator';
-import { auth } from '@/middleware/auth.middleware';
-import { UserRole } from '@/modules/user/user.types';
-import { upload } from '@/middleware/upload.middleware';
+import { auth } from '../../middleware/auth.middleware';
+import { UserRole } from '../../modules/user/user.types';
+import { upload } from '../../middleware/upload.middleware';
 
 const router = express.Router();
 

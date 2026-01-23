@@ -1,11 +1,4 @@
-// Force restart -v9
-import { register } from 'tsconfig-paths';
-
-register({
-  baseUrl: __dirname,
-  paths: { '@/*': ['./*'] }
-});
-
+// Force restart -v10
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';

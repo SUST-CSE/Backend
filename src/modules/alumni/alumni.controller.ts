@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
 import * as AlumniService from './alumni.service';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
 
 export const getAllAlumni = asyncHandler(async (req: Request, res: Response) => {
   const result = await AlumniService.getAllAlumni(req.query);

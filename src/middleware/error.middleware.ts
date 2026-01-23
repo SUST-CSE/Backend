@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '@/utils/errors/AppError';
-import { env } from '@/config/env';
+import { AppError } from '../utils/errors/AppError';
+import { env } from '../config/env';
 
 export const errorMiddleware = (
   err: any,

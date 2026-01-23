@@ -1,6 +1,6 @@
 import { Blog } from './blog.schema';
 import { IBlog, BlogStatus } from './blog.interface';
-import { AppError } from '@/utils/errors';
+import { AppError } from '../../utils/errors';
 
 export const createBlog = async (data: Partial<IBlog>): Promise<IBlog> => {
   return Blog.create(data);

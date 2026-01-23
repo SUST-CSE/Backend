@@ -1,7 +1,7 @@
 import express from 'express';
 import * as UserController from './user.controller';
-import { auth } from '@/middleware/auth.middleware';
-import { upload } from '@/middleware/upload.middleware';
+import { auth } from '../../middleware/auth.middleware';
+import { upload } from '../../middleware/upload.middleware';
 import { UserRole } from './user.types';
 
 const router = express.Router();

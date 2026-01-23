@@ -1,6 +1,6 @@
 import { Course, AcademicAchievement, AcademicStat } from './academic.schema';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
-import { NotFoundError } from '@/utils/errors';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
+import { NotFoundError } from '../../utils/errors';
 
 // Courses
 export const createCourse = async (data: any) => {

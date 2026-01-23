@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
 import * as EventService from './event.service';
 
 export const createEvent = asyncHandler(async (req: Request, res: Response) => {

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '@/utils/asyncHandler.util';
-import { successResponse } from '@/utils/response.util';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
 import { User } from './user.schema';
-import { deleteFromCloudinary, uploadToCloudinary } from '@/utils/cloudinary.util';
-import { AppError } from '@/utils/errors';
-import { sendEmail } from '@/utils/email.util';
+import { deleteFromCloudinary, uploadToCloudinary } from '../../utils/cloudinary.util';
+import { AppError } from '../../utils/errors';
+import { sendEmail } from '../../utils/email.util';
 import crypto from 'crypto';
 import { Student, Teacher } from './user.schema';
 import { UserRole } from './user.types';

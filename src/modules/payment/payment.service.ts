@@ -1,5 +1,5 @@
 import { Payment } from './payment.schema';
-import { NotFoundError } from '@/utils/errors';
+import { NotFoundError } from '../../utils/errors';
 import { PaymentStatus } from './payment.types';
 import crypto from 'crypto';
 

@@ -1,9 +1,9 @@
 import express from 'express';
 import * as PaymentController from './payment.controller';
-import { validate } from '@/middleware/validate.middleware';
+import { validate } from '../../middleware/validate.middleware';
 import { createPaymentSchema, updatePaymentStatusSchema } from './payment.validator';
-import { auth } from '@/middleware/auth.middleware';
-import { UserRole } from '@/modules/user/user.types';
+import { auth } from '../../middleware/auth.middleware';
+import { UserRole } from '../../modules/user/user.types';
 
 const router = express.Router();
 

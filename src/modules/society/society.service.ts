@@ -1,6 +1,6 @@
 import { Society, SocietyMember } from './society.schema';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
-import { NotFoundError } from '@/utils/errors';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
+import { NotFoundError } from '../../utils/errors';
 
 // Societies
 export const createSociety = async (data: any, file: Express.Multer.File, userId: string) => {

@@ -1,6 +1,6 @@
 import { Product } from './product.schema';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
-import { NotFoundError } from '@/utils/errors';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
+import { NotFoundError } from '../../utils/errors';
 
 // Get all active products (public)
 export const getAllProducts = async () => {

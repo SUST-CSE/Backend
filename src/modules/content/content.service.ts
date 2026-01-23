@@ -1,8 +1,8 @@
 import { HomePage, Notice, Achievement } from './content.schema';
-import { uploadToCloudinary } from '@/utils/cloudinary.util';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
 import { Types } from 'mongoose';
-import { NotFoundError } from '@/utils/errors';
-import { notifyInterestedUsers } from '@/utils/notification.util';
+import { NotFoundError } from '../../utils/errors';
+import { notifyInterestedUsers } from '../../utils/notification.util';
 
 // HomePage
 export const getHomePage = async () => {

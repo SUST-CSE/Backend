@@ -1,7 +1,7 @@
-import { User } from '@/modules/user/user.schema';
+import { User } from '../modules/user/user.schema';
 import { sendEmail } from './email.util';
-import { env } from '@/config/env';
-import { TargetAudience } from '@/modules/content/content.types';
+import { env } from '../config/env';
+import { TargetAudience } from '../modules/content/content.types';
 
 export const notifyInterestedUsers = async (
   type: 'notice' | 'event',
