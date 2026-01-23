@@ -13,6 +13,7 @@ export interface IAlumni {
   linkedIn?: string;
   facebook?: string;
   instagram?: string;
+  website?: string;
   email?: string;
   createdAt: Date;
   updatedAt: Date;

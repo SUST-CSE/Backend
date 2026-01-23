@@ -9,6 +9,9 @@ export const createAlumniSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters'),
   quotes: z.string().min(5, 'Quotes must be at least 5 characters'),
   linkedIn: z.string().url('Invalid LinkedIn URL').optional(),
+  facebook: z.string().url('Invalid Facebook URL').optional(),
+  instagram: z.string().url('Invalid Instagram URL').optional(),
+  website: z.string().url('Invalid Website URL').optional(),
   email: z.string().email('Invalid email address').optional(),
 });
 
@@ -21,5 +24,8 @@ export const updateAlumniSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters').optional(),
   quotes: z.string().min(5, 'Quotes must be at least 5 characters').optional(),
   linkedIn: z.string().url('Invalid LinkedIn URL').optional(),
+  facebook: z.string().url('Invalid Facebook URL').optional(),
+  instagram: z.string().url('Invalid Instagram URL').optional(),
+  website: z.string().url('Invalid Website URL').optional(),
   email: z.string().email('Invalid email address').optional(),
 });

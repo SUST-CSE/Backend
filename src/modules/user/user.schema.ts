@@ -63,6 +63,7 @@ const userSchema = new Schema<IUser>(
       facebook: { type: String, trim: true },
       linkedin: { type: String, trim: true },
       instagram: { type: String, trim: true },
+      website: { type: String, trim: true },
     },
   },
   {

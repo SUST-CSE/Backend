@@ -51,6 +51,10 @@ const alumniSchema = new Schema<IAlumni, AlumniModel>(
       type: String,
       trim: true,
     },
+    website: {
+      type: String,
+      trim: true,
+    },
     email: {
       type: String,
       trim: true,

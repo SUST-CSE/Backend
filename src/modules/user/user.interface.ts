@@ -22,6 +22,7 @@ export interface IUser {
     facebook?: string;
     linkedin?: string;
     instagram?: string;
+    website?: string;
   };
   createdAt: Date;
   updatedAt: Date;

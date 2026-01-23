@@ -88,28 +88,9 @@ export const updateHomePage = async (data: any, files: Express.Multer.File[] | u
     console.log('No files and no valid update operation');
   }
 
-  // Final update with explicit cleanup
+  // Final update
   homepage.heroSlides = currentSlides;
-  homepage.updatedBy = userId;
-  
-  // Explicitly clear legacy fields
-  homepage.heroImage = undefined;
-  homepage.heroImages = undefined;
-  homepage.title = undefined;
-  homepage.subtitle = undefined;
-  homepage.description = undefined;
-  homepage.ctaText = undefined;
-  homepage.ctaLink = undefined;
-
-  // Since we have strict: false, Mongoose will try to save these as undefined
-  // But we can also use .set() for explicit undefined
-  homepage.set('heroImage', undefined);
-  homepage.set('heroImages', undefined);
-  homepage.set('title', undefined);
-  homepage.set('subtitle', undefined);
-  homepage.set('description', undefined);
-  homepage.set('ctaText', undefined);
-  homepage.set('ctaLink', undefined);
+  homepage.updatedBy = new Types.ObjectId(userId);
 
   return await homepage.save();
 };

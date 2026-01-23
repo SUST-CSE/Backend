@@ -45,7 +45,7 @@ export const deleteBlog = async (id: string, userId: string, role: string): Prom
   }
 
   // Only author or admin can delete
-  if (blog.author.toString() !== userId && role !== 'ADMIN') {
+  if (blog.author?.toString() !== userId && role !== 'ADMIN') {
     throw new AppError('You are not authorized to delete this blog', 403);
   }
 

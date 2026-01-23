@@ -101,6 +101,7 @@ export const addAlumniFromUser = async (userId: string) => {
     linkedIn: student.socialLinks?.linkedin || '',
     facebook: student.socialLinks?.facebook || '',
     instagram: student.socialLinks?.instagram || '',
+    website: student.socialLinks?.website || '',
     email: student.email,
   };
 
