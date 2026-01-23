@@ -1,4 +1,11 @@
-// Force restart -v6
+// Force restart -v7
+import { register } from 'tsconfig-paths';
+
+register({
+  baseUrl: './',
+  paths: { '@/*': ['src/*'] }
+});
+
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,6 +14,10 @@ import { env } from './config/env';
 import { errorMiddleware } from './middleware/error.middleware';
 import { NotFoundError } from './utils/errors';
 import { setupSwagger } from './config/swagger';
+import { connectDB } from './config/database';
+
+// Initialize DB (for serverless environments)
+connectDB();
 
 const app: Application = express();
 
