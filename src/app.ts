@@ -1,10 +1,9 @@
-// Force restart -v8
-import path from 'path';
+// Force restart -v9
 import { register } from 'tsconfig-paths';
 
 register({
-  baseUrl: path.resolve(__dirname, '../'),
-  paths: { '@/*': ['src/*'] }
+  baseUrl: __dirname,
+  paths: { '@/*': ['./*'] }
 });
 
 import express, { Application, Request, Response } from 'express';

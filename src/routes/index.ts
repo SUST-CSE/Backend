@@ -1,15 +1,15 @@
 import express from 'express';
-import { AuthRoutes } from '@/modules/auth/auth.routes';
-import { ContentRoutes } from '@/modules/content/content.routes';
-import { EventRoutes } from '@/modules/event/event.routes';
-import { SocietyRoutes } from '@/modules/society/society.routes';
-import { SportsRoutes } from '@/modules/sports/sports.routes';
-import { AcademicRoutes } from '@/modules/academic/academic.routes';
-import { PaymentRoutes } from '@/modules/payment/payment.routes';
-import { UserRoutes } from '@/modules/user/user.routes';
-import { BlogRoutes } from '@/modules/blog/blog.routes';
-import { AlumniRoutes } from '@/modules/alumni/alumni.routes';
-import { ProductRoutes } from '@/modules/product/product.routes';
+import { AuthRoutes } from '../modules/auth/auth.routes';
+import { ContentRoutes } from '../modules/content/content.routes';
+import { EventRoutes } from '../modules/event/event.routes';
+import { SocietyRoutes } from '../modules/society/society.routes';
+import { SportsRoutes } from '../modules/sports/sports.routes';
+import { AcademicRoutes } from '../modules/academic/academic.routes';
+import { PaymentRoutes } from '../modules/payment/payment.routes';
+import { UserRoutes } from '../modules/user/user.routes';
+import { BlogRoutes } from '../modules/blog/blog.routes';
+import { AlumniRoutes } from '../modules/alumni/alumni.routes';
+import { ProductRoutes } from '../modules/product/product.routes';
 
 const router = express.Router();
 console.log('✅ Main Router Module Loaded');
