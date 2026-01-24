@@ -220,7 +220,7 @@ export const bulkCreateUsers = asyncHandler(async (req: Request, res: Response) 
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Password:</strong> ${password}</p>
             <p>Please login and change your password immediately.</p>
-            <a href="${process.env.FRONTEND_URL}/login" style="display:inline-block; background:#16a34a; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">Login Now</a>
+            <a href="${process.env.CLIENT_URL}/login" style="display:inline-block; background:#16a34a; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">Login Now</a>
           </div>
         `
       });
