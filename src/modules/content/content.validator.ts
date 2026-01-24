@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AchievementCategory, NoticeCategory } from './content.types';
+import { AchievementCategory, NoticeCategory, TargetAudience } from './content.types';
 
 export const homePageSchema = z.object({
   heroSlides: z.array(z.object({
@@ -27,6 +27,13 @@ export const noticeSchema = z.object({
   isPinned: z.union([z.boolean(), z.string()])
     .transform((val) => val === 'true' || val === true)
     .optional(),
+  isImportant: z.union([z.boolean(), z.string()])
+    .transform((val) => val === 'true' || val === true)
+    .optional(),
+  shouldSendEmail: z.union([z.boolean(), z.string()])
+    .transform((val) => val === 'true' || val === true)
+    .optional(),
+  targetAudience: z.nativeEnum(TargetAudience).optional(),
   category: z.nativeEnum(NoticeCategory),
 });
 
