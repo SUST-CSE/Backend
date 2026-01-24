@@ -20,8 +20,11 @@ export const notifyInterestedUsers = async (
     const filter: any = { isDeleted: false, isEmailVerified: true };
     
     if (type === 'notice') {
+      // Ensure isImportant is a boolean (might be a string if passed directly from req.body)
+      const isImportant = contentData.isImportant === true || (contentData.isImportant as any) === 'true';
+      
       // If it's important, we bypass category preferences and send to ALL relevant users
-      if (!contentData.isImportant) {
+      if (!isImportant) {
         filter['notificationPreferences.notices'] = category;
       }
       
@@ -36,7 +39,7 @@ export const notifyInterestedUsers = async (
     }
 
     console.log('🔍 Looking for users with filter:', JSON.stringify(filter));
-    const users = await User.find(filter).select('email name');
+    const users = await User.find(filter).select('email name isEmailVerified status');
     
     console.log(`👥 Found ${users.length} match(es) for this notification.`);
     
