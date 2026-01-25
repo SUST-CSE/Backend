@@ -323,6 +323,12 @@ export const getStudents = asyncHandler(async (req: Request, res: Response) => {
 // Get Single Public Profile
 export const getUserById = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
+  
+  // Check if valid MongoDB ID
+  if (typeof id !== 'string' || !id.match(/^[0-9a-fA-F]{24}$/)) {
+    throw new AppError('Invalid User ID format', 400);
+  }
+
   const user = await User.findById(id).select('-password -__v -verificationCode -verificationCodeExpires');
 
   if (!user) {
