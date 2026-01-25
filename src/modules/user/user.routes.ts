@@ -54,4 +54,9 @@ router.delete(
   UserController.deleteUser
 );
 
+router.get(
+  '/:id',
+  UserController.getUserById
+);
+
 export const UserRoutes = router;
