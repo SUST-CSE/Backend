@@ -30,6 +30,13 @@ router.get(
 );
 
 router.patch(
+  '/me',
+  auth(),
+  upload.single('profileImage'),
+  UserController.updateMyProfile
+);
+
+router.patch(
   '/:id/status',
   auth(UserRole.ADMIN),
   UserController.updateUserStatus
@@ -39,13 +46,6 @@ router.patch(
   '/:id',
   auth(UserRole.ADMIN),
   UserController.updateUser
-);
-
-router.patch(
-  '/me',
-  auth(),
-  upload.single('profileImage'),
-  UserController.updateMyProfile
 );
 
 router.delete(
