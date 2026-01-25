@@ -61,6 +61,7 @@ const userSchema = new Schema<IUser>(
     },
     socialLinks: {
       facebook: { type: String, trim: true },
+      github: { type: String, trim: true },
       linkedin: { type: String, trim: true },
       instagram: { type: String, trim: true },
       website: { type: String, trim: true },
@@ -116,10 +117,17 @@ const studentSchema = new Schema<IStudent>({
     type: Number,
     required: [true, 'Enrollment year is required'],
   },
-  projectLinks: {
-    github: { type: String, trim: true },
+  // projectLinks: { // Keeping old structure for migration if needed, but per plan replacing/adding
+  //   github: { type: String, trim: true },
+  //   liveLink: { type: String, trim: true },
+  // },
+  projects: [{
+    title: { type: String, trim: true },
+    description: { type: String, trim: true },
+    githubLink: { type: String, trim: true },
     liveLink: { type: String, trim: true },
-  },
+    technologies: [String]
+  }],
   isAlumni: {
     type: Boolean,
     default: false,

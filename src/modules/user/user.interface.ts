@@ -20,6 +20,7 @@ export interface IUser {
   };
   socialLinks?: {
     facebook?: string;
+    github?: string;
     linkedin?: string;
     instagram?: string;
     website?: string;
@@ -34,10 +35,17 @@ export interface IStudent extends IUser {
   session: string;
   cgpa?: number;
   enrollmentYear: number;
-  projectLinks?: {
+  projectLinks?: { // Deprecated, keeping for backward compat if needed, or remove? Plan said "Change".
     github?: string;
     liveLink?: string;
   };
+  projects?: {
+    title: string;
+    description: string;
+    githubLink?: string;
+    liveLink?: string;
+    technologies?: string[];
+  }[];
   isAlumni: boolean;
 }
 

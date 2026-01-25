@@ -85,6 +85,14 @@ export const updateMyProfile = asyncHandler(async (req: Request, res: Response) 
     }
   }
 
+  if (typeof updates.projects === 'string') {
+    try {
+      updates.projects = JSON.parse(updates.projects);
+    } catch (e) {
+      console.error('Error parsing projects:', e);
+    }
+  }
+
   // Handle profile image upload
   if (req.file) {
     console.log('📸 Uploading image...');
@@ -94,7 +102,7 @@ export const updateMyProfile = asyncHandler(async (req: Request, res: Response) 
 
   // Prevent updating sensitive fields
   const sanitizedUpdates: any = {};
-  const allowedFields = ['name', 'phone', 'profileImage', 'designation', 'researchInterests', 'publications', 'cgpa', 'notificationPreferences', 'socialLinks', 'projectLinks'];
+  const allowedFields = ['name', 'phone', 'profileImage', 'designation', 'researchInterests', 'publications', 'cgpa', 'notificationPreferences', 'socialLinks', 'projectLinks', 'projects', 'studentId', 'batch', 'session'];
   
   Object.keys(updates).forEach((key) => {
     if (allowedFields.includes(key)) {
@@ -185,7 +193,7 @@ export const bulkCreateUsers = asyncHandler(async (req: Request, res: Response) 
           designation: 'Lecturer',
         });
       } else {
-        // Extract ID from email: 2021331002@student.sust.edu -> 2021331002
+        // Only extract ID if it's a student or default
         const idMatch = email.match(/^(\d+)/);
         const studentId = idMatch ? idMatch[1] : `S${Date.now()}`;
 
