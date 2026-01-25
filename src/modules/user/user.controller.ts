@@ -7,7 +7,7 @@ import { AppError } from '../../utils/errors';
 import { sendEmail } from '../../utils/email.util';
 import crypto from 'crypto';
 import { Student, Teacher } from './user.schema';
-import { UserRole } from './user.types';
+import { UserRole, UserStatus } from './user.types';
 
 export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   const { email, role, status, limit = 50, page = 1 } = req.query;
@@ -172,11 +172,23 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.params.id as string;
 
-  const user = await User.findByIdAndDelete(userId);
+  const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError('User not found', 404);
   }
+
+  // Safe Soft Delete: Rename unique fields to avoid collision
+  const salt = crypto.randomBytes(4).toString('hex');
+  user.isDeleted = true;
+  user.email = `deleted_${salt}_${user.email}`;
+  // If studentId exists and is unique, rename it too
+  if ((user as any).studentId) {
+    (user as any).studentId = `deleted_${salt}_${(user as any).studentId}`;
+  }
+  user.status = UserStatus.INACTIVE; // Ensure they can't login even if isDeleted logic fails
+  
+  await user.save();
 
   successResponse(res, null, 'User deleted successfully');
 });

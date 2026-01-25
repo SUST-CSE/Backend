@@ -13,15 +13,24 @@ const generateVerificationCode = (): string => {
 export const registerStudent = async (data: any) => {
   const isExist = await User.findOne({ email: data.email });
   if (isExist) {
+    if (!isExist.isEmailVerified) {
+       // Optional: Could allow resending code here, but for now just inform user
+       throw new ConflictError('User with this email already exists. Please check your email for verification code.');
+    }
     throw new ConflictError('User with this email already exists');
   }
 
   const verificationCode = generateVerificationCode();
   const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
+  // Auto-approve if official email
+  const isOfficial = data.email.endsWith('@student.sust.edu') || data.email.endsWith('@sust.edu');
+  const status = isOfficial ? UserStatus.ACTIVE : UserStatus.PENDING;
+
   const student = (await Student.create({
     ...data,
     role: UserRole.STUDENT,
+    status, // Set status dynamically
     verificationCode,
     verificationCodeExpires,
     isEmailVerified: false,
@@ -32,7 +41,9 @@ export const registerStudent = async (data: any) => {
 
   return { 
     user: student,
-    message: 'Registration successful. Please check your email for the verification code.'
+    message: isOfficial 
+      ? 'Registration successful. Please verify your email to activate your account.' 
+      : 'Registration successful. Verify your email. Note: External accounts require Admin approval.'
   };
 };
 
@@ -45,10 +56,14 @@ export const registerTeacher = async (data: any) => {
   const verificationCode = generateVerificationCode();
   const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
+  // Auto-approve if official email (though teachers usually need manual approval regardless, user logic implies differentiation)
+  const isOfficial = data.email.endsWith('@sust.edu');
+  const status = isOfficial ? UserStatus.ACTIVE : UserStatus.PENDING;
+
   const teacher = (await Teacher.create({
     ...data,
     role: UserRole.TEACHER,
-    status: UserStatus.PENDING,
+    status,
     verificationCode,
     verificationCodeExpires,
     isEmailVerified: false,
@@ -59,7 +74,9 @@ export const registerTeacher = async (data: any) => {
 
   return { 
     user: teacher,
-    message: 'Registration successful. Please check your email for the verification code. After verification, your account will be sent to admin for approval.'
+    message: isOfficial 
+      ? 'Registration successful. Please verify your email.' 
+      : 'Registration successful. Verify your email. External accounts require Admin approval.'
   };
 };
 
