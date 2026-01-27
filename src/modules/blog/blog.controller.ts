@@ -23,23 +23,12 @@ export const createBlog = asyncHandler(async (req: Request, res: Response) => {
   // Check if user is authenticated
   const user = (req as any).user;
   
-  const blogData: any = {
+  const blogData = {
     ...req.body,
     tags,
     image: imageUrl || undefined,
+    author: user._id,
   };
-
-  if (user) {
-    // Authenticated user
-    blogData.author = user._id;
-  } else {
-    // Guest user - require name and email
-    if (!req.body.guestName || !req.body.guestEmail) {
-      throw new AppError('Guest users must provide name and email', 400);
-    }
-    blogData.guestName = req.body.guestName;
-    blogData.guestEmail = req.body.guestEmail;
-  }
 
   const blog = await BlogService.createBlog(blogData);
   successResponse(res, blog, 'Blog post submitted for verification', 201);

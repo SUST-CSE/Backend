@@ -1,0 +1,20 @@
+export enum WorkStatus {
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  OVERDUE = 'OVERDUE',
+}
+
+export enum WorkPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT',
+}
+
+export enum WorkVisibility {
+  PUBLIC_TO_SOCIETY = 'PUBLIC_TO_SOCIETY',
+  ADMIN_ONLY = 'ADMIN_ONLY',
+  SPECIFIC_ROLES = 'SPECIFIC_ROLES',
+}

@@ -11,13 +11,21 @@ const generateVerificationCode = (): string => {
 };
 
 export const registerStudent = async (data: any) => {
-  const isExist = await User.findOne({ email: data.email });
-  if (isExist) {
-    if (!isExist.isEmailVerified) {
-       // Optional: Could allow resending code here, but for now just inform user
+  // Check email uniqueness
+  const existingEmail = await User.findOne({ email: data.email });
+  if (existingEmail) {
+    if (!existingEmail.isEmailVerified) {
        throw new ConflictError('User with this email already exists. Please check your email for verification code.');
     }
     throw new ConflictError('User with this email already exists');
+  }
+
+  // Check student ID uniqueness if provided - Check base User to catch all discriminators
+  if (data.studentId) {
+    const existingStudent = await User.findOne({ studentId: data.studentId });
+    if (existingStudent) {
+      throw new ConflictError(`A student account with ID ${data.studentId} already exists. If you were added by admin, please contact them to reset your password instead of registering again.`);
+    }
   }
 
   const verificationCode = generateVerificationCode();

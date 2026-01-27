@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { env } from '../config/env';
+import { EmailLog } from '../modules/email-log/email-log.schema';
 
 // Create reusable transporter using dynamic SMTP config
 const transporter = nodemailer.createTransport({
@@ -13,11 +14,13 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendVerificationEmail = async (email: string, code: string) => {
+  const subject = 'Verify your SUST CSE Dashboard Account';
+  const type = 'VERIFICATION';
   try {
     const info = await transporter.sendMail({
       from: `"SUST CSE Dashboard" <${env.EMAIL_USER}>`,
       to: email,
-      subject: 'Verify your SUST CSE Dashboard Account',
+      subject,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
           <h2 style="color: #0f172a; margin-bottom: 24px;">Confirm Your Email</h2>
@@ -38,15 +41,31 @@ export const sendVerificationEmail = async (email: string, code: string) => {
       `,
     });
 
+    await EmailLog.create({
+      recipient: email,
+      subject,
+      type,
+      status: 'SUCCESS',
+      sentAt: new Date(),
+    });
+
     console.log('✅ Verification email sent:', info.messageId);
     return info;
-  } catch (err) {
+  } catch (err: any) {
     console.error('❌ Email sending error:', err);
+    await EmailLog.create({
+      recipient: email,
+      subject,
+      type,
+      status: 'FAILED',
+      error: err.message,
+      sentAt: new Date(),
+    });
     throw new Error('Failed to send verification email');
   }
 };
 
-export const sendEmail = async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
+export const sendEmail = async ({ to, subject, html, type = 'GENERAL' }: { to: string; subject: string; html: string; type?: string }) => {
   try {
     const info = await transporter.sendMail({
       from: `"SUST CSE Department" <${env.EMAIL_USER}>`,
@@ -54,9 +73,26 @@ export const sendEmail = async ({ to, subject, html }: { to: string; subject: st
       subject,
       html,
     });
+
+    await EmailLog.create({
+      recipient: to,
+      subject,
+      type,
+      status: 'SUCCESS',
+      sentAt: new Date(),
+    });
+
     return info;
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Email sending error:', error);
+    await EmailLog.create({
+      recipient: to,
+      subject,
+      type,
+      status: 'FAILED',
+      error: error.message,
+      sentAt: new Date(),
+    });
     throw error;
   }
 };

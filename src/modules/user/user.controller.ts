@@ -10,12 +10,21 @@ import { Student, Teacher } from './user.schema';
 import { UserRole, UserStatus } from './user.types';
 
 export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-  const { email, role, status, limit = 50, page = 1 } = req.query;
+  const { email, role, status, limit = 50, page = 1, search } = req.query;
   const filter: any = { isDeleted: false };
 
-  if (email) {
+  if (search) {
+    const searchRegex = { $regex: search, $options: 'i' };
+    filter.$or = [
+      { name: searchRegex },
+      { email: searchRegex },
+      { studentId: searchRegex },
+      { designation: searchRegex }
+    ];
+  } else if (email) {
     filter.email = { $regex: email, $options: 'i' };
   }
+
   if (role) {
     filter.role = role;
   }

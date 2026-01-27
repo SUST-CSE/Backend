@@ -4,9 +4,10 @@ import { asyncHandler } from '../utils/asyncHandler.util';
 import { verifyToken } from '../utils/jwt.util';
 import { env } from '../config/env';
 import { User } from '../modules/user/user.schema';
+import { UserPermission } from '../modules/user/user.interface';
 import { UserRole } from '../modules/user/user.types';
 
-export const auth = (...roles: UserRole[]) => {
+export const auth = (roles: UserRole[] = [], permissions: UserPermission[] = []) => {
   return asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     // 1. Get token from headers
     const authHeader = req.headers.authorization;
@@ -31,12 +32,22 @@ export const auth = (...roles: UserRole[]) => {
         throw new AuthenticationError('Your account is not active.');
       }
 
-      // 5. Check if user has required role
-      console.log(`🔒 Auth Check: User ${currentUser.email} (${currentUser.role}) accessing route requiring [${roles.join(', ')}]`);
+      // 5. Grant access if Admin
+      if (currentUser.role === UserRole.ADMIN) {
+        (req as any).user = currentUser;
+        return next();
+      }
+
+      // 6. Check if user has required role
+      const hasRequiredRole = roles.length === 0 || roles.includes(currentUser.role);
       
-      if (roles.length > 0 && !roles.includes(currentUser.role)) {
-        console.warn(`🚫 Access Denied: User role ${currentUser.role} not in allowed list [${roles.join(', ')}]`);
-        throw new AuthorizationError();
+      // 7. Check if user has any of the required permissions
+      const userPermissions = currentUser.permissions || [];
+      const hasRequiredPermission = permissions.length > 0 && permissions.some(p => userPermissions.includes(p));
+
+      if (!hasRequiredRole && !hasRequiredPermission) {
+        console.warn(`🚫 Access Denied: User ${currentUser.email} lacks required roles or permissions`);
+        throw new AuthorizationError('You do not have permission to perform this action');
       }
 
       // Grant access to protected route

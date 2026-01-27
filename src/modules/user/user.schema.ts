@@ -27,6 +27,10 @@ const userSchema = new Schema<IUser>(
       enum: Object.values(UserRole),
       default: UserRole.STUDENT,
     },
+    permissions: {
+      type: [String],
+      default: [],
+    },
     profileImage: {
       type: String,
     },
@@ -110,7 +114,7 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
-export const User = model<IUser, UserModel>('User', userSchema);
+export const User = model<IUser, UserModel>('User', userSchema as any);
 
 // Student Discriminator
 const studentSchema = new Schema<IStudent>({

@@ -15,6 +15,7 @@ router.get('/:id', BlogController.getBlogById);
 
 router.post(
   '/',
+  auth(),
   upload.single('image'),
   BlogController.createBlog
 );

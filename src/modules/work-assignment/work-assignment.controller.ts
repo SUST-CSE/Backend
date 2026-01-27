@@ -1,0 +1,41 @@
+import { Request, Response } from 'express';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
+import * as WorkAssignmentService from './work-assignment.service';
+import { UserRole } from '../user/user.types';
+
+export const createAssignment = asyncHandler(async (req: Request, res: Response) => {
+  const adminId = (req as any).user._id;
+  const result = await WorkAssignmentService.createWorkAssignment({
+    ...req.body,
+    assignedBy: adminId,
+  });
+  successResponse(res, result, 'Work assigned successfully', 201);
+});
+
+export const getMyWork = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as any).user._id;
+  const result = await WorkAssignmentService.getMyAssignments(userId);
+  successResponse(res, result, 'Your assignments fetched successfully');
+});
+
+export const getSocietyWork = asyncHandler(async (req: Request, res: Response) => {
+  const { societyId } = req.params;
+  const user = (req as any).user;
+  const isAdmin = user.role === UserRole.ADMIN;
+  
+  const result = await WorkAssignmentService.getAssignmentsForSociety(societyId as string, user._id, isAdmin);
+  successResponse(res, result, 'Society assignments fetched successfully');
+});
+
+export const getAllWork = asyncHandler(async (req: Request, res: Response) => {
+  const result = await WorkAssignmentService.getAllAssignments(req.query);
+  successResponse(res, result, 'All assignments fetched successfully');
+});
+
+export const updateStatus = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { status, feedback } = req.body;
+  const result = await WorkAssignmentService.updateAssignmentStatus(id as string, status, feedback);
+  successResponse(res, result, 'Assignment status updated successfully');
+});

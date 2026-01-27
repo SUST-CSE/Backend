@@ -10,6 +10,10 @@ import { UserRoutes } from '../modules/user/user.routes';
 import { BlogRoutes } from '../modules/blog/blog.routes';
 import { AlumniRoutes } from '../modules/alumni/alumni.routes';
 import { ProductRoutes } from '../modules/product/product.routes';
+import { WorkAssignmentRoutes } from '../modules/work-assignment/work-assignment.routes';
+import { ApplicationRoutes } from '../modules/application/application.routes';
+import { EmailLogRoutes } from '../modules/email-log/email-log.routes';
+import { FinanceRoutes } from '../modules/finance/finance.routes';
 
 const router = express.Router();
 console.log('✅ Main Router Module Loaded');
@@ -58,6 +62,22 @@ const moduleRoutes = [
   {
     path: '/',
     route: ProductRoutes,
+  },
+  {
+    path: '/work-assignments',
+    route: WorkAssignmentRoutes,
+  },
+  {
+    path: '/applications',
+    route: ApplicationRoutes,
+  },
+  {
+    path: '/email-logs',
+    route: EmailLogRoutes,
+  },
+  {
+    path: '/finance',
+    route: FinanceRoutes,
   },
 ];
 

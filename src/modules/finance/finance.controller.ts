@@ -1,0 +1,29 @@
+import { Request, Response } from 'express';
+import { asyncHandler } from '../../utils/asyncHandler.util';
+import { successResponse } from '../../utils/response.util';
+import * as FinanceService from './finance.service';
+
+export const addTransaction = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as any).user._id;
+  const result = await FinanceService.addTransaction({
+    ...req.body,
+    addedBy: userId,
+  });
+  successResponse(res, result, 'Transaction added successfully', 201);
+});
+
+export const getTransactions = asyncHandler(async (req: Request, res: Response) => {
+  const result = await FinanceService.getTransactions(req.query);
+  successResponse(res, result, 'Transactions fetched successfully');
+});
+
+export const getSummary = asyncHandler(async (req: Request, res: Response) => {
+  const result = await FinanceService.getFinancialSummary();
+  successResponse(res, result, 'Financial summary fetched successfully');
+});
+
+export const deleteTransaction = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await FinanceService.deleteTransaction(id as string);
+  successResponse(res, null, 'Transaction deleted successfully');
+});

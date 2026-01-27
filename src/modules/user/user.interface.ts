@@ -1,12 +1,22 @@
 import { Model, Types } from 'mongoose';
 import { UserRole, UserStatus } from './user.types';
 
+export enum UserPermission {
+  MANAGE_USERS = 'MANAGE_USERS',
+  MANAGE_CONTENT = 'MANAGE_CONTENT',
+  MANAGE_SOCIETIES = 'MANAGE_SOCIETIES',
+  MANAGE_APPLICATIONS = 'MANAGE_APPLICATIONS',
+  VIEW_EMAIL_LOGS = 'VIEW_EMAIL_LOGS',
+  MANAGE_ACCOUNTS = 'MANAGE_ACCOUNTS',
+}
+
 export interface IUser {
   _id: Types.ObjectId;
   name: string;
   email: string;
   password?: string;
   role: UserRole;
+  permissions: UserPermission[];
   profileImage?: string;
   phone: string;
   status: UserStatus;
