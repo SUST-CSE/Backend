@@ -7,7 +7,13 @@ import { User } from '../modules/user/user.schema';
 import { UserPermission } from '../modules/user/user.interface';
 import { UserRole } from '../modules/user/user.types';
 
-export const auth = (roles: UserRole[] = [], permissions: UserPermission[] = []) => {
+export const auth = (
+  roles: UserRole | UserRole[] = [],
+  permissions: UserPermission | UserPermission[] = []
+) => {
+  const rolesArray = Array.isArray(roles) ? roles : [roles];
+  const permissionsArray = Array.isArray(permissions) ? permissions : [permissions];
+
   return asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     // 1. Get token from headers
     const authHeader = req.headers.authorization;
@@ -39,11 +45,11 @@ export const auth = (roles: UserRole[] = [], permissions: UserPermission[] = [])
       }
 
       // 6. Check if user has required role
-      const hasRequiredRole = roles.length === 0 || roles.includes(currentUser.role);
+      const hasRequiredRole = rolesArray.length === 0 || rolesArray.includes(currentUser.role);
       
       // 7. Check if user has any of the required permissions
       const userPermissions = currentUser.permissions || [];
-      const hasRequiredPermission = permissions.length > 0 && permissions.some(p => userPermissions.includes(p));
+      const hasRequiredPermission = permissionsArray.length > 0 && permissionsArray.some(p => userPermissions.includes(p));
 
       if (!hasRequiredRole && !hasRequiredPermission) {
         console.warn(`🚫 Access Denied: User ${currentUser.email} lacks required roles or permissions`);

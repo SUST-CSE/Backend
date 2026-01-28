@@ -32,7 +32,7 @@ router.delete(
 router.get('/achievements', AcademicController.getAchievements);
 router.post(
   '/achievements',
-  auth(UserRole.ADMIN, UserRole.TEACHER),
+  auth([UserRole.ADMIN, UserRole.TEACHER]),
   upload.array('attachments', 5),
   validate(createAcademicAchievementSchema),
   AcademicController.createAchievement

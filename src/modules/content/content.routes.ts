@@ -23,7 +23,7 @@ router.get('/notices', ContentController.getNotices);
 router.get('/notices/:id', ContentController.getNoticeById);
 router.post(
   '/notices',
-  auth(UserRole.ADMIN, UserRole.STUDENT),
+  auth([UserRole.ADMIN, UserRole.STUDENT]),
   upload.array('attachments', 5),
   validate(noticeSchema),
   ContentController.createNotice
@@ -39,7 +39,7 @@ router.get('/achievements', ContentController.getAchievements);
 router.get('/achievements/:id', ContentController.getAchievementById);
 router.post(
   '/achievements',
-  auth(UserRole.ADMIN, UserRole.TEACHER),
+  auth([UserRole.ADMIN, UserRole.TEACHER]),
   upload.array('images', 5),
   validate(achievementSchema),
   ContentController.createAchievement
