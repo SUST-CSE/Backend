@@ -1,13 +1,30 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler.util';
 import { successResponse } from '../../utils/response.util';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
+import { AppError } from '../../utils/errors';
 import * as FinanceService from './finance.service';
 
 export const addTransaction = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
+  let proofUrl = '';
+  let proofType = '';
+
+  if (req.file) {
+    const { secure_url, format } = await uploadToCloudinary(req.file, 'sust-cse/finance');
+    proofUrl = secure_url;
+    proofType = format === 'pdf' ? 'pdf' : 'image';
+  }
+
+  // Handle amount if it comes as string from FormData
+  const amount = typeof req.body.amount === 'string' ? Number(req.body.amount) : req.body.amount;
+
   const result = await FinanceService.addTransaction({
     ...req.body,
+    amount,
     addedBy: userId,
+    proofUrl,
+    proofType,
   });
   successResponse(res, result, 'Transaction added successfully', 201);
 });

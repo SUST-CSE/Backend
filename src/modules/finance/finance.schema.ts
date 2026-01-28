@@ -19,6 +19,8 @@ const transactionSchema = new Schema<ITransaction>(
     },
     date: { type: Date, required: true, default: Date.now },
     addedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    proofUrl: String,
+    proofType: String,
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }

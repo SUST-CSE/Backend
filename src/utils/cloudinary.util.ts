@@ -4,7 +4,7 @@ import { AppError } from './errors/AppError';
 export const uploadToCloudinary = async (
   file: Express.Multer.File,
   folder: string
-): Promise<{ secure_url: string; public_id: string }> => {
+): Promise<{ secure_url: string; public_id: string; format?: string }> => {
   console.log('=== uploadToCloudinary called ===');
   console.log('Folder:', folder);
   console.log('File:', {
@@ -26,6 +26,7 @@ export const uploadToCloudinary = async (
         resolve({
           secure_url: result!.secure_url,
           public_id: result!.public_id,
+          format: result?.format,
         });
       }
     );
