@@ -34,13 +34,20 @@ export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     filter.status = status;
   }
 
+  const total = await User.countDocuments(filter);
   const users = await User.find(filter)
-    .select('name email role status phone profileImage studentId designation isEmailVerified createdAt')
+    .select('name email role status phone profileImage studentId designation isEmailVerified createdAt permissions')
     .sort({ createdAt: -1 })
     .limit(Number(limit))
     .skip((Number(page) - 1) * Number(limit));
 
-  successResponse(res, users, 'Users fetched successfully');
+  successResponse(res, {
+    users,
+    total,
+    page: Number(page),
+    limit: Number(limit),
+    totalPages: Math.ceil(total / Number(limit))
+  }, 'Users fetched successfully');
 });
 
 export const updateUserStatus = asyncHandler(async (req: Request, res: Response) => {
@@ -333,11 +340,23 @@ export const bulkCreateUsers = asyncHandler(async (req: Request, res: Response) 
 
 // Get Public Faculty List
 export const getFaculty = asyncHandler(async (req: Request, res: Response) => {
-  const users = await User.find({ role: UserRole.TEACHER, status: 'ACTIVE', isDeleted: false })
+  const { limit = 50, page = 1 } = req.query;
+  const filter = { role: UserRole.TEACHER, status: 'ACTIVE', isDeleted: false };
+  
+  const total = await User.countDocuments(filter);
+  const users = await User.find(filter)
     .select('name email role designation profileImage researchInterests publications experiences researches socialLinks')
-    .sort({ createdAt: 1 }); // Or by designation rank if logic existed
+    .sort({ createdAt: 1 })
+    .limit(Number(limit))
+    .skip((Number(page) - 1) * Number(limit));
 
-  successResponse(res, users, 'Faculty list fetched successfully');
+  successResponse(res, {
+    users,
+    total,
+    page: Number(page),
+    limit: Number(limit),
+    totalPages: Math.ceil(total / Number(limit))
+  }, 'Faculty list fetched successfully');
 });
 
 // Get Students List (Protected)
@@ -361,7 +380,13 @@ export const getStudents = asyncHandler(async (req: Request, res: Response) => {
 
   const total = await User.countDocuments(filter);
 
-  successResponse(res, { users, total }, 'Student list fetched successfully');
+  successResponse(res, {
+    users,
+    total,
+    page: Number(page),
+    limit: Number(limit),
+    totalPages: Math.ceil(total / Number(limit))
+  }, 'Student list fetched successfully');
 });
 
 // Get Single Public Profile

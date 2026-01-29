@@ -1,13 +1,22 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler.util';
 import { successResponse } from '../../utils/response.util';
+import { uploadToCloudinary } from '../../utils/cloudinary.util';
 import * as ApplicationService from './application.service';
 
 export const submitApplication = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
+  let fileUrl = '';
+
+  if (req.file) {
+    const { secure_url } = await uploadToCloudinary(req.file, 'sust-cse/applications');
+    fileUrl = secure_url;
+  }
+
   const result = await ApplicationService.submitApplication({
     ...req.body,
     submittedBy: userId,
+    attachments: fileUrl ? [fileUrl] : [],
   });
   successResponse(res, result, 'Application submitted successfully', 201);
 });

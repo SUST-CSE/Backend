@@ -3,7 +3,7 @@ import { IUser } from '../../modules/user/user.interface';
 import { AppError, AuthenticationError, ConflictError } from '../../utils/errors';
 import { generateAccessToken, generateRefreshToken } from '../../utils/jwt.util';
 import { UserRole, UserStatus } from '../../modules/user/user.types';
-import { sendVerificationEmail } from '../../utils/email.util';
+import { sendVerificationEmail, sendPasswordResetEmail } from '../../utils/email.util';
 import crypto from 'crypto';
 
 const generateVerificationCode = (): string => {
@@ -208,7 +208,7 @@ export const forgotPassword = async (email: string) => {
   user.verificationCodeExpires = verificationCodeExpires;
   await user.save();
 
-  await sendVerificationEmail(user.email, verificationCode); // Reusing verification email template for now, or could create a new one
+  await sendPasswordResetEmail(user.email, verificationCode); 
 
   return { message: 'Password reset code sent to email' };
 };

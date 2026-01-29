@@ -53,6 +53,15 @@ export const auth = (
 
       if (!hasRequiredRole && !hasRequiredPermission) {
         console.warn(`🚫 Access Denied: User ${currentUser.email} lacks required roles or permissions`);
+        console.log('DEBUG AUTH:', {
+          email: currentUser.email,
+          role: currentUser.role,
+          userPermissions,
+          requiredRoles: rolesArray,
+          requiredPermissions: permissionsArray,
+          hasRequiredRole,
+          hasRequiredPermission
+        });
         throw new AuthorizationError('You do not have permission to perform this action');
       }
 
@@ -60,6 +69,9 @@ export const auth = (
       (req as any).user = currentUser;
       next();
     } catch (error: any) {
+      if (error instanceof AuthorizationError || error instanceof AuthenticationError) {
+        throw error;
+      }
       throw new AuthenticationError(`Invalid token or token expired. Details: ${error.message}`);
     }
   });

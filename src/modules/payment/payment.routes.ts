@@ -8,6 +8,7 @@ import { UserRole } from '../../modules/user/user.types';
 const router = express.Router();
 
 router.get('/my', auth(UserRole.STUDENT), PaymentController.getMyPayments);
+router.get('/history', auth(UserRole.STUDENT), PaymentController.getMyPayments); // Added history route
 router.get('/all', auth(UserRole.ADMIN), PaymentController.getAllPayments);
 router.get('/:id', auth(), PaymentController.getPaymentById);
 

@@ -7,11 +7,14 @@ import { submitApplicationSchema, updateApplicationStatusSchema } from './applic
 
 import { UserPermission } from '../user/user.interface';
 
+import { upload } from '../../middleware/upload.middleware';
+
 const router = express.Router();
 
 router.post(
   '/',
   auth([UserRole.STUDENT]),
+  upload.single('file'), // Handle PDF/Image attachment
   validate(submitApplicationSchema),
   ApplicationController.submitApplication
 );

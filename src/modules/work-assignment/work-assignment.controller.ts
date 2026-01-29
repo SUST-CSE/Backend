@@ -5,11 +5,18 @@ import * as WorkAssignmentService from './work-assignment.service';
 import { UserRole } from '../user/user.types';
 
 export const createAssignment = asyncHandler(async (req: Request, res: Response) => {
-  const adminId = (req as any).user._id;
+  const user = (req as any).user;
+  const adminId = user._id;
+
+  // If user has MANAGE_WORK permission, treat as ADMIN for hierarchy bypass validation in service
+  const effectiveRole = (user.role === UserRole.ADMIN || user.permissions?.includes('MANAGE_WORK')) 
+    ? UserRole.ADMIN 
+    : user.role;
+
   const result = await WorkAssignmentService.createWorkAssignment({
     ...req.body,
     assignedBy: adminId,
-  }, (req as any).user.role);
+  }, effectiveRole);
   successResponse(res, result, 'Work assigned successfully', 201);
 });
 

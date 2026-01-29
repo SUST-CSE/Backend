@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import * as AuthService from './auth.service';
 import { asyncHandler } from '../../utils/asyncHandler.util';
 import { successResponse } from '../../utils/response.util';
-import * as AuthService from './auth.service';
+import { UserRole } from '../user/user.types';
 
 export const registerStudent = asyncHandler(async (req: Request, res: Response) => {
   const result = await AuthService.registerStudent(req.body);
@@ -23,7 +24,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
   const user = (req as any).user;
-  
   successResponse(res, user, 'User profile fetched successfully');
 });
 
