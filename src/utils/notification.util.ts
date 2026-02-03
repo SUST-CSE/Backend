@@ -6,9 +6,10 @@ import { TargetAudience } from '../modules/content/content.types';
 export const notifyInterestedUsers = async (
   type: 'notice' | 'event',
   category: string,
-  contentData: { title: string; id: string; targetAudience?: TargetAudience; shouldSendEmail?: boolean; isImportant?: boolean }
+  contentData: { title: string; id: string; targetAudience?: TargetAudience; shouldSendEmail?: boolean; isImportant?: boolean },
+  isUpdate: boolean = false
 ) => {
-  console.log(`🔔 Notification Triggered: [${type.toUpperCase()}] Category: ${category}, Title: ${contentData.title}, Important: ${contentData.isImportant}`);
+  console.log(`🔔 Notification Triggered: [${type.toUpperCase()}] ${isUpdate ? '(UPDATE)' : '(NEW)'} Category: ${category}, Title: ${contentData.title}`);
   try {
     // If it's a notice and shouldSendEmail is false, we can skip the email process but maybe still log or something
     if (type === 'notice' && contentData.shouldSendEmail === false) {
@@ -49,6 +50,7 @@ export const notifyInterestedUsers = async (
     }
 
     const typeLabel = type === 'notice' ? 'Notice' : 'Event';
+    const statusLabel = isUpdate ? 'Updated' : 'Published';
     const link = `${env.CLIENT_URL}/${type}s/${contentData.id}`;
 
     console.log('✉️ Starting email blast...');
@@ -56,12 +58,12 @@ export const notifyInterestedUsers = async (
       try {
         const result = await sendEmail({
           to: user.email,
-          subject: `New ${typeLabel}: ${contentData.title}`,
+          subject: `${isUpdate ? 'Updated' : 'New'} ${typeLabel}: ${contentData.title}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
-              <h2 style="color: #002147; margin-bottom: 20px;">New ${typeLabel} Published</h2>
+              <h2 style="color: #002147; margin-bottom: 20px;">${typeLabel} ${statusLabel}</h2>
               <p>Hello ${user.name},</p>
-              <p>A new <strong>${typeLabel}</strong> in the category <strong>${category}</strong> has been published on the SUST CSE website.</p>
+              <p>A ${typeLabel.toLowerCase()} in the category <strong>${category}</strong> has been ${statusLabel.toLowerCase()} on the SUST CSE website.</p>
               
               <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 25px 0;">
                 <h3 style="margin-top: 0; color: #0f172a;">${contentData.title}</h3>

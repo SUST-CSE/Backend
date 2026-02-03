@@ -46,3 +46,12 @@ export interface IAchievement {
   createdBy: Types.ObjectId;
   isDeleted: boolean;
 }
+
+export interface IImportantData {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  file: string;
+  type: 'PDF' | 'IMAGE';
+  createdBy: Types.ObjectId;
+}

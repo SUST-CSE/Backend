@@ -652,8 +652,8 @@ This project is licensed under the **ISC License**.
 
 ## Developer
 
-**Lead Developer:** [Zubayer Hossain Uday](https://github.com/uday-zubayer)  
-**Email:** uday.sust.cse@gmail.com
+**Lead Developer:** [Zubayer Hossain Uday](https://github.com/Uday2027)  
+**Email:** zubayerhossain1009@gmail.com
 
 ---
 

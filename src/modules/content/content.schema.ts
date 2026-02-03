@@ -82,3 +82,17 @@ const achievementSchema = new Schema(
 );
 
 export const Achievement = model<IAchievement>('Achievement', achievementSchema);
+
+// Important Data Schema (PDFs/Images)
+const importantDataSchema = new Schema(
+  {
+    title: { type: String, required: true, trim: true },
+    description: { type: String },
+    file: { type: String, required: true },
+    type: { type: String, enum: ['PDF', 'IMAGE'], required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  },
+  { timestamps: true }
+);
+
+export const ImportantData = model('ImportantData', importantDataSchema);

@@ -9,7 +9,7 @@ const DesignationRank: Record<MemberDesignation, number> = {
   [MemberDesignation.SPORTS_SECRETARY]: 80,
   [MemberDesignation.ORGANIZING_SECRETARY]: 80,
   [MemberDesignation.PUBLICATION_SECRETARY]: 80,
-  [MemberDesignation.ASSISTANT_GENERAL_SECRETARY]: 80,
+  [MemberDesignation.ASSISTANT_ORGANIZING_SECRETARY]: 80,
   [MemberDesignation.EXECUTIVE_MEMBER]: 10,
 };
 

@@ -104,3 +104,46 @@ export const getAssignmentsForSociety = async (societyId: string, userId: string
     .populate('assignedBy', 'name')
     .sort({ deadline: 1 });
 };
+
+export const updateAssignment = async (id: string, data: any) => {
+  const assignment = await WorkAssignment.findByIdAndUpdate(id, data, { new: true })
+    .populate('assignedTo', 'name email')
+    .populate('assignedBy', 'name')
+    .populate('society', 'name');
+
+  if (!assignment) throw new AppError('Assignment not found', 404);
+
+  // Send Email Notification
+  const user = assignment.assignedTo as any;
+  const author = assignment.assignedBy as any;
+  const society = assignment.society as any;
+
+  if (user && user.email) {
+    await sendEmail({
+      to: user.email,
+      subject: `Work Assignment Updated: ${assignment.title}`,
+      type: 'WORK_UPDATE',
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <h2 style="color: #0f172a; margin-bottom: 16px;">Task Updated</h2>
+          <p>Hello <strong>${user.name}</strong>,</p>
+          <p>The task <strong>${assignment.title}</strong> has been updated by ${author?.name || 'Admin'}.</p>
+          <div style="background-color: #f8fafc; padding: 16px; border-radius: 8px; margin: 24px 0;">
+            <p><strong>Description:</strong> ${assignment.description}</p>
+            <p><strong>Deadline:</strong> ${new Date(assignment.deadline).toLocaleDateString()}</p>
+            <p><strong>Status:</strong> ${assignment.status}</p>
+          </div>
+          <p>Please check your dashboard for details.</p>
+        </div>
+      `,
+    });
+  }
+
+  return assignment;
+};
+
+export const deleteAssignment = async (id: string) => {
+  const assignment = await WorkAssignment.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
+  if (!assignment) throw new AppError('Assignment not found', 404);
+  return assignment;
+};

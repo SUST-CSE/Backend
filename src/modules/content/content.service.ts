@@ -1,4 +1,4 @@
-import { HomePage, Notice, Achievement } from './content.schema';
+import { HomePage, Notice, Achievement, ImportantData } from './content.schema';
 import { uploadToCloudinary } from '../../utils/cloudinary.util';
 import { Types } from 'mongoose';
 import { NotFoundError } from '../../utils/errors';
@@ -137,6 +137,37 @@ export const getAllNotices = async (filters: any) => {
     .populate('createdBy', 'name email');
 };
 
+export const updateNotice = async (id: string, data: any, files: Express.Multer.File[], userId: string) => {
+  const notice = await Notice.findById(id);
+  if (!notice) throw new NotFoundError('Notice not found');
+
+  const updateData = { ...data };
+
+  if (files && files.length > 0) {
+    const attachments = [...(notice.attachments || [])];
+    for (const file of files) {
+      const { secure_url } = await uploadToCloudinary(file, 'sust-cse/notices');
+      attachments.push(secure_url);
+    }
+    updateData.attachments = attachments;
+  }
+
+  const updatedNotice = await Notice.findByIdAndUpdate(id, updateData, { new: true });
+
+  // Notify interested users about the update
+  if (updatedNotice) {
+    await notifyInterestedUsers('notice', updatedNotice.category, {
+      title: updatedNotice.title,
+      id: (updatedNotice._id as any).toString(),
+      targetAudience: updatedNotice.targetAudience,
+      shouldSendEmail: updatedNotice.shouldSendEmail,
+      isImportant: updatedNotice.isImportant,
+    }, true); // Passing true for isUpdate
+  }
+
+  return updatedNotice;
+};
+
 export const deleteNotice = async (id: string) => {
   const notice = await Notice.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
   if (!notice) throw new NotFoundError('Notice not found');
@@ -243,4 +274,41 @@ export const sendMessage = async (
   }
 
   return results;
+};
+
+// Important Data
+export const createImportantData = async (data: any, files: Express.Multer.File[], userId: string) => {
+  let fileUrl = '';
+  if (files && files.length > 0) {
+    const { secure_url } = await uploadToCloudinary(files[0], 'sust-cse/important-data');
+    fileUrl = secure_url;
+  }
+
+  if (!fileUrl) {
+    throw new Error('File is required for Important Data');
+  }
+
+  // Determine type based on mimetype if possible, or assume based on extension? 
+  // For now rely on data.type or infer from file
+  // But schema has type: PDF | IMAGE.
+  // We can trust the uploader or check file.mimetype
+  
+  if (!data.type && files[0].mimetype === 'application/pdf') data.type = 'PDF';
+  if (!data.type && files[0].mimetype.startsWith('image/')) data.type = 'IMAGE';
+
+  return await ImportantData.create({
+    ...data,
+    file: fileUrl,
+    createdBy: userId,
+  });
+};
+
+export const getAllImportantData = async () => {
+  return await ImportantData.find().sort({ createdAt: -1 }).populate('createdBy', 'name email');
+};
+
+export const deleteImportantData = async (id: string) => {
+  const data = await ImportantData.findByIdAndDelete(id);
+  if (!data) throw new NotFoundError('Data not found');
+  return data;
 };

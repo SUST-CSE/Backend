@@ -40,4 +40,16 @@ router.patch(
   WorkAssignmentController.updateStatus
 );
 
+router.put(
+  '/:id',
+  auth([UserRole.ADMIN, UserRole.TEACHER], [UserPermission.MANAGE_WORK]),
+  WorkAssignmentController.updateAssignment
+);
+
+router.delete(
+  '/:id',
+  auth([UserRole.ADMIN], [UserPermission.MANAGE_WORK]),
+  WorkAssignmentController.deleteAssignment
+);
+
 export const WorkAssignmentRoutes = router;

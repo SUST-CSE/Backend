@@ -94,7 +94,16 @@ export const updateEvent = async (id: string, data: any, files: { [fieldname: st
     }
   }
 
-  return await Event.findByIdAndUpdate(id, updateData, { new: true });
+  const updatedEvent = await Event.findByIdAndUpdate(id, updateData, { new: true });
+
+  if (updatedEvent) {
+    await notifyInterestedUsers('event', updatedEvent.category, {
+      title: updatedEvent.title,
+      id: (updatedEvent._id as any).toString(),
+    }, true);
+  }
+
+  return updatedEvent;
 };
 
 export const deleteEvent = async (id: string) => {

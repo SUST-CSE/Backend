@@ -29,6 +29,12 @@ router.post(
   validate(noticeSchema),
   ContentController.createNotice
 );
+router.patch(
+  '/notices/:id',
+  auth([UserRole.ADMIN, UserRole.STUDENT, UserRole.TEACHER], [UserPermission.MANAGE_NOTICES]),
+  upload.array('attachments', 5),
+  ContentController.updateNotice
+);
 router.delete(
   '/notices/:id',
   auth([UserRole.ADMIN], [UserPermission.MANAGE_NOTICES, UserPermission.MANAGE_CONTENT]),
@@ -52,5 +58,19 @@ router.delete(
 );
 
 router.post('/send-message', auth(UserRole.ADMIN), ContentController.sendMessage);
+
+// Important Data
+router.get('/important-data', ContentController.getImportantData);
+router.post(
+  '/important-data',
+  auth([UserRole.ADMIN], [UserPermission.MANAGE_CONTENT]),
+  upload.array('file', 1),
+  ContentController.createImportantData
+);
+router.delete(
+  '/important-data/:id',
+  auth([UserRole.ADMIN], [UserPermission.MANAGE_CONTENT]),
+  ContentController.deleteImportantData
+);
 
 export const ContentRoutes = router;

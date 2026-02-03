@@ -46,3 +46,15 @@ export const updateStatus = asyncHandler(async (req: Request, res: Response) => 
   const result = await WorkAssignmentService.updateAssignmentStatus(id as string, status, feedback);
   successResponse(res, result, 'Assignment status updated successfully');
 });
+
+export const updateAssignment = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await WorkAssignmentService.updateAssignment(id as string, req.body);
+  successResponse(res, result, 'Assignment updated successfully');
+});
+
+export const deleteAssignment = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await WorkAssignmentService.deleteAssignment(id as string);
+  successResponse(res, null, 'Assignment deleted successfully');
+});
