@@ -2,11 +2,10 @@ import express from 'express';
 import { UserRole } from '../user/user.types';
 import { UserPermission } from '../user/user.interface';
 import { auth } from '../../middleware/auth.middleware';
-import multer from 'multer';
+import { upload } from '../../middleware/upload.middleware';
 import * as CostController from './cost.controller';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
 
 // Submit Cost Request
 router.post(

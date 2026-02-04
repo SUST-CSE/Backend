@@ -14,6 +14,11 @@ export const uploadToCloudinary = async (
     bufferLength: file.buffer?.length
   });
   
+  if (!file.buffer || file.buffer.length === 0) {
+    console.error('❌ uploadToCloudinary error: Empty file buffer');
+    throw new AppError('File buffer is empty or missing', 400);
+  }
+  
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       { folder, resource_type: 'auto' },
