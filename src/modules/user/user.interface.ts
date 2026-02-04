@@ -14,6 +14,13 @@ export enum UserPermission {
   MANAGE_RESEARCH = 'MANAGE_RESEARCH',
   MANAGE_BLOGS = 'MANAGE_BLOGS',
   MANAGE_WORK = 'MANAGE_WORK',
+  MANAGE_IMPORTANT_DATA = 'MANAGE_IMPORTANT_DATA',
+  
+  // Cost Cycle Permissions
+  SUBMIT_COST = 'SUBMIT_COST',
+  APPROVE_COST_L1 = 'APPROVE_COST_L1', // General Secretary
+  APPROVE_COST_L2 = 'APPROVE_COST_L2', // Treasurer
+  APPROVE_COST_FINAL = 'APPROVE_COST_FINAL', // Admin/Dept Head
 }
 
 export interface IUser {

@@ -63,13 +63,13 @@ router.post('/send-message', auth(UserRole.ADMIN), ContentController.sendMessage
 router.get('/important-data', ContentController.getImportantData);
 router.post(
   '/important-data',
-  auth([UserRole.ADMIN], [UserPermission.MANAGE_CONTENT]),
-  upload.array('file', 1),
+  auth([UserRole.ADMIN], [UserPermission.MANAGE_IMPORTANT_DATA]),
+  upload.array('files', 10),
   ContentController.createImportantData
 );
 router.delete(
   '/important-data/:id',
-  auth([UserRole.ADMIN], [UserPermission.MANAGE_CONTENT]),
+  auth([UserRole.ADMIN], [UserPermission.MANAGE_IMPORTANT_DATA]),
   ContentController.deleteImportantData
 );
 

@@ -55,6 +55,9 @@ export const updateAssignment = asyncHandler(async (req: Request, res: Response)
 
 export const deleteAssignment = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  await WorkAssignmentService.deleteAssignment(id as string);
+  const user = (req as any).user;
+  const isAdmin = user.role === UserRole.ADMIN;
+
+  await WorkAssignmentService.deleteAssignment(id as string, user._id, isAdmin);
   successResponse(res, null, 'Assignment deleted successfully');
 });

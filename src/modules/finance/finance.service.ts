@@ -18,12 +18,19 @@ export const getFinancialSummary = async () => {
   
   let totalIncome = 0;
   let totalExpense = 0;
+  const categoryBreakdown: Record<string, { income: number; expense: number }> = {};
 
   transactions.forEach((tx) => {
+    if (!categoryBreakdown[tx.category]) {
+      categoryBreakdown[tx.category] = { income: 0, expense: 0 };
+    }
+
     if (tx.type === TransactionType.INCOME) {
       totalIncome += tx.amount;
+      categoryBreakdown[tx.category].income += tx.amount;
     } else {
       totalExpense += tx.amount;
+      categoryBreakdown[tx.category].expense += tx.amount;
     }
   });
 
@@ -48,6 +55,7 @@ export const getFinancialSummary = async () => {
     balance,
     monthlyIncome,
     monthlyExpense,
+    categoryBreakdown,
   };
 };
 

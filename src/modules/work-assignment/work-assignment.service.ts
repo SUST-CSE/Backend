@@ -142,8 +142,20 @@ export const updateAssignment = async (id: string, data: any) => {
   return assignment;
 };
 
-export const deleteAssignment = async (id: string) => {
-  const assignment = await WorkAssignment.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
+export const deleteAssignment = async (id: string, userId: string, isAdmin: boolean) => {
+  const assignment = await WorkAssignment.findOne({ _id: id, isDeleted: false });
   if (!assignment) throw new AppError('Assignment not found', 404);
+
+  // Allow delete if:
+  // 1. User is ADMIN
+  // 2. User is the creator (assignedBy)
+  const isCreator = assignment.assignedBy && assignment.assignedBy.toString() === userId.toString();
+
+  if (!isAdmin && !isCreator) {
+    throw new AppError('You are not authorized to delete this assignment', 403);
+  }
+
+  assignment.isDeleted = true;
+  await assignment.save();
   return assignment;
 };

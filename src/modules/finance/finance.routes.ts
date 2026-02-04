@@ -1,11 +1,13 @@
 import express from 'express';
-import * as FinanceController from './finance.controller';
 import { auth } from '../../middleware/auth.middleware';
-import { UserRole } from '../user/user.types';
-import { UserPermission } from '../user/user.interface';
 import { validate } from '../../middleware/validate.middleware';
+import * as FinanceController from './finance.controller';
 import { upload } from '../../middleware/upload.middleware';
 import { addTransactionSchema } from './finance.validator';
+
+import { CostRoutes } from './cost.routes';
+import { UserRole } from '../user/user.types';
+import { UserPermission } from '../user/user.interface';
 
 const router = express.Router();
 
@@ -35,4 +37,8 @@ router.delete(
   FinanceController.deleteTransaction
 );
 
+// Mount Cost Routes
+router.use('/cost', CostRoutes);
+
+console.log('✅ Finance Routes Module Loaded');
 export const FinanceRoutes = router;
