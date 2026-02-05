@@ -131,6 +131,7 @@ export const addCheckNumber = async (id: string, checkNumber: string, userId: st
   await costRequest.save();
 
   // AUTO-CREATE FINANCE TRANSACTION WHEN CHECK NUMBER IS ADDED
+  const populated = await costRequest.populate('createdBy', 'name');
   console.log(`[Finance Sync] Creating transaction for cost: ${costRequest.title} (${costRequest.amount} BDT)`);
   
   await Transaction.create({
@@ -138,10 +139,10 @@ export const addCheckNumber = async (id: string, checkNumber: string, userId: st
     amount: costRequest.amount,
     type: TransactionType.EXPENSE,
     category: TransactionCategory.COST_MANAGEMENT,
-    description: `Approved cost request: ${costRequest.description} (Check No: ${checkNumber})`,
+    description: `Approved cost request by ${(populated.createdBy as any).name}: ${costRequest.description} (Check No: ${checkNumber})`,
     date: new Date(),
     addedBy: userId,
-    proofUrl: costRequest.attachments?.[0] || '', // Use first attachment as proof if available
+    proofUrls: costRequest.attachments || [],
   });
 
   return costRequest;
@@ -162,15 +163,16 @@ export const syncApprovedCostsToFinance = async (userId: string) => {
     });
 
     if (!existing) {
+      const populatedCost = await cost.populate('createdBy', 'name');
       await Transaction.create({
         title: `[Cost Request] ${cost.title}`,
         amount: cost.amount,
         type: TransactionType.EXPENSE,
         category: TransactionCategory.COST_MANAGEMENT,
-        description: `Synced approved cost request: ${cost.description} (Check No: ${cost.checkNumber})`,
+        description: `Synced approved cost request by ${(populatedCost.createdBy as any).name}: ${cost.description} (Check No: ${cost.checkNumber})`,
         date: cost.checkDate || new Date(),
         addedBy: userId,
-        proofUrl: cost.attachments?.[0] || '',
+        proofUrls: cost.attachments || [],
       });
       syncedCount++;
     }

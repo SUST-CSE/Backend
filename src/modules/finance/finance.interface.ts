@@ -10,7 +10,7 @@ export interface ITransaction {
   category: TransactionCategory;
   date: Date;
   addedBy: Types.ObjectId; // User ref
-  proofUrl?: string;
+  proofUrls?: string[];
   proofType?: string;
   isDeleted: boolean;
   createdAt: Date;

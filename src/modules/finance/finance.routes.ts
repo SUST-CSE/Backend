@@ -14,7 +14,7 @@ const router = express.Router();
 router.post(
   '/',
   auth([UserRole.ADMIN], [UserPermission.MANAGE_ACCOUNTS]),
-  upload.single('proof'),
+  upload.array('proof', 5),
   validate(addTransactionSchema),
   FinanceController.addTransaction
 );

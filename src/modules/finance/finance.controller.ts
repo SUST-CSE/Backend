@@ -7,13 +7,15 @@ import * as FinanceService from './finance.service';
 
 export const addTransaction = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
-  let proofUrl = '';
+  const proofUrls: string[] = [];
   let proofType = '';
 
-  if (req.file) {
-    const { secure_url, format } = await uploadToCloudinary(req.file, 'sust-cse/finance');
-    proofUrl = secure_url;
-    proofType = format === 'pdf' ? 'pdf' : 'image';
+  if (req.files && Array.isArray(req.files)) {
+    for (const file of req.files as Express.Multer.File[]) {
+      const { secure_url, format } = await uploadToCloudinary(file, 'sust-cse/finance');
+      proofUrls.push(secure_url);
+      if (!proofType) proofType = format === 'pdf' ? 'pdf' : 'image';
+    }
   }
 
   // Handle amount if it comes as string from FormData
@@ -23,7 +25,7 @@ export const addTransaction = asyncHandler(async (req: Request, res: Response) =
     ...req.body,
     amount,
     addedBy: userId,
-    proofUrl,
+    proofUrls,
     proofType,
   });
   successResponse(res, result, 'Transaction added successfully', 201);
