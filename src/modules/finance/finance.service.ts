@@ -10,6 +10,15 @@ export const addTransaction = async (data: Partial<ITransaction>) => {
 export const getTransactions = async (filter: any = {}) => {
   return await Transaction.find({ ...filter, isDeleted: false })
     .populate('addedBy', 'name email profileImage')
+    .populate({
+      path: 'relatedCostRequest',
+      populate: [
+        { path: 'createdBy', select: 'name email designation avatar' },
+        { path: 'approvedByL1.approvedBy', select: 'name' },
+        { path: 'approvedByL2.approvedBy', select: 'name' },
+        { path: 'approvedByFinal.approvedBy', select: 'name' }
+      ]
+    })
     .sort({ date: -1 });
 };
 

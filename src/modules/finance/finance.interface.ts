@@ -12,6 +12,7 @@ export interface ITransaction {
   addedBy: Types.ObjectId; // User ref
   proofUrls?: string[];
   proofType?: string;
+  relatedCostRequest?: Types.ObjectId;
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;

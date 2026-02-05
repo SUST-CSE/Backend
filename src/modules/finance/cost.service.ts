@@ -143,6 +143,7 @@ export const addCheckNumber = async (id: string, checkNumber: string, userId: st
     date: new Date(),
     addedBy: userId,
     proofUrls: costRequest.attachments || [],
+    relatedCostRequest: costRequest._id,
   });
 
   return costRequest;
@@ -173,6 +174,7 @@ export const syncApprovedCostsToFinance = async (userId: string) => {
         date: cost.checkDate || new Date(),
         addedBy: userId,
         proofUrls: cost.attachments || [],
+        relatedCostRequest: cost._id,
       });
       syncedCount++;
     }
