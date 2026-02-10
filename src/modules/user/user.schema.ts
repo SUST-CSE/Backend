@@ -34,6 +34,9 @@ const userSchema = new Schema<IUser>(
     profileImage: {
       type: String,
     },
+    signatureUrl: {
+      type: String,
+    },
     phone: {
       type: String,
       required: [true, 'Phone number is required'],

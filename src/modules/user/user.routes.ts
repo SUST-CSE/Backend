@@ -31,10 +31,19 @@ router.get(
   UserController.getStudents
 );
 
+router.get(
+  '/approvers',
+  auth([]),
+  UserController.getApprovers
+);
+
 router.patch(
   '/me',
   auth([]),
-  upload.single('profileImage'),
+  upload.fields([
+    { name: 'profileImage', maxCount: 1 },
+    { name: 'signatureUrl', maxCount: 1 }
+  ]),
   UserController.updateMyProfile
 );
 

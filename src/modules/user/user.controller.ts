@@ -159,14 +159,37 @@ export const updateMyProfile = asyncHandler(async (req: Request, res: Response) 
 
   // Handle profile image upload
   if (req.file) {
-    console.log('📸 Uploading image...');
+    console.log('📸 Uploading single image...');
     const uploadResult = await uploadToCloudinary(req.file, 'profiles');
-    updates.profileImage = uploadResult.secure_url;
+    
+    // Determine if it's a signature or profile image based on field name
+    if (req.file.fieldname === 'signatureUrl') {
+      updates.signatureUrl = uploadResult.secure_url;
+    } else {
+      updates.profileImage = uploadResult.secure_url;
+    }
+  }
+
+  // Handle multiple files if both signature and profile image are uploaded (using upload.fields())
+  if (req.files && typeof req.files === 'object' && !Array.isArray(req.files)) {
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    
+    if (files.profileImage && files.profileImage[0]) {
+      console.log('📸 Uploading profile image...');
+      const uploadResult = await uploadToCloudinary(files.profileImage[0], 'profiles');
+      updates.profileImage = uploadResult.secure_url;
+    }
+    
+    if (files.signatureUrl && files.signatureUrl[0]) {
+      console.log('✍️ Uploading signature...');
+      const uploadResult = await uploadToCloudinary(files.signatureUrl[0], 'profiles');
+      updates.signatureUrl = uploadResult.secure_url;
+    }
   }
 
   // Prevent updating sensitive fields
   const sanitizedUpdates: any = {};
-  const allowedFields = ['name', 'phone', 'profileImage', 'designation', 'researchInterests', 'publications', 'cgpa', 'notificationPreferences', 'socialLinks', 'projectLinks', 'projects', 'experiences', 'researches', 'studentId', 'batch', 'session'];
+  const allowedFields = ['name', 'phone', 'profileImage', 'signatureUrl', 'designation', 'researchInterests', 'publications', 'cgpa', 'notificationPreferences', 'socialLinks', 'projectLinks', 'projects', 'experiences', 'researches', 'studentId', 'batch', 'session'];
   
   Object.keys(updates).forEach((key) => {
     if (allowedFields.includes(key)) {
@@ -387,6 +410,34 @@ export const getStudents = asyncHandler(async (req: Request, res: Response) => {
     limit: Number(limit),
     totalPages: Math.ceil(total / Number(limit))
   }, 'Student list fetched successfully');
+});
+
+// Get Approvers List (Teachers + Admins)
+export const getApprovers = asyncHandler(async (req: Request, res: Response) => {
+  const { search } = req.query;
+  const filter: any = { 
+    status: 'ACTIVE', 
+    isDeleted: false,
+    $or: [
+      { role: { $in: [UserRole.TEACHER, UserRole.ADMIN] } },
+      { permissions: { $in: ['APPROVE_APPLICATION_L0', 'APPROVE_APPLICATION_L1', 'APPROVE_APPLICATION_L2'] } }
+    ]
+  };
+
+  if (search) {
+    const escapedSearch = (search as string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    filter.$or = [
+      { name: { $regex: escapedSearch, $options: 'i' } },
+      { email: { $regex: escapedSearch, $options: 'i' } }
+    ];
+  }
+
+  const users = await User.find(filter)
+    .select('name email role designation profileImage')
+    .sort({ role: 1, name: 1 })
+    .limit(100);
+
+  successResponse(res, { users }, 'Approvers fetched successfully');
 });
 
 // Get Single Public Profile

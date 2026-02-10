@@ -21,6 +21,12 @@ export enum UserPermission {
   APPROVE_COST_L1 = 'APPROVE_COST_L1', // General Secretary
   APPROVE_COST_L2 = 'APPROVE_COST_L2', // Treasurer
   APPROVE_COST_FINAL = 'APPROVE_COST_FINAL', // Admin/Dept Head
+
+  // Application Workflow Permissions
+  // Application Workflow Permissions
+  APPROVE_APPLICATION_L0 = 'APPROVE_APPLICATION_L0',
+  APPROVE_APPLICATION_L1 = 'APPROVE_APPLICATION_L1',
+  APPROVE_APPLICATION_L2 = 'APPROVE_APPLICATION_L2',
 }
 
 export interface IUser {
@@ -31,6 +37,7 @@ export interface IUser {
   role: UserRole;
   permissions: UserPermission[];
   profileImage?: string;
+  signatureUrl?: string;
   phone: string;
   status: UserStatus;
   isEmailVerified: boolean;
