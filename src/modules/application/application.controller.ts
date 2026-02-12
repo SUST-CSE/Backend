@@ -6,17 +6,20 @@ import * as ApplicationService from './application.service';
 
 export const submitApplication = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;
-  let fileUrl = '';
+  const { submissionMode, textContent, ...otherData } = req.body;
+  let fileUrls: string[] = [];
 
   if (req.file) {
     const { secure_url } = await uploadToCloudinary(req.file, 'sust-cse/applications');
-    fileUrl = secure_url;
+    fileUrls = [secure_url];
   }
 
   const result = await ApplicationService.submitApplication({
-    ...req.body,
+    ...otherData,
+    submissionMode: submissionMode || (req.file ? 'PDF' : 'TEXT'),
+    textContent,
     submittedBy: userId,
-    attachments: fileUrl ? [fileUrl] : [],
+    attachments: fileUrls,
   });
   successResponse(res, result, 'Application submitted successfully', 201);
 });
@@ -28,7 +31,8 @@ export const getMyApplications = asyncHandler(async (req: Request, res: Response
 });
 
 export const getAllApplications = asyncHandler(async (req: Request, res: Response) => {
-  const result = await ApplicationService.getAllApplications(req.query);
+  const user = (req as any).user;
+  const result = await ApplicationService.getAllApplications(req.query, user);
   successResponse(res, result, 'Applications fetched successfully');
 });
 
@@ -40,7 +44,22 @@ export const getApplicationById = asyncHandler(async (req: Request, res: Respons
 
 export const updateStatus = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status, feedback } = req.body;
-  const result = await ApplicationService.updateApplicationStatus(id as string, status, feedback);
-  successResponse(res, result, `Application ${status.toLowerCase()} successfully`);
+  const { status, feedback, l0Reviewer, medium, to } = req.body;
+  const result = await ApplicationService.updateApplicationStatus(id as string, { status, feedback, l0Reviewer, medium, to });
+  successResponse(res, result, `Application updated successfully`);
+});
+
+export const approveStage = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { stage, status, feedback } = req.body;
+  const reviewerId = (req as any).user._id;
+
+  const result = await ApplicationService.approveApplicationStage(
+    id as string,
+    stage,
+    reviewerId,
+    status,
+    feedback
+  );
+  successResponse(res, result, `Stage ${stage} ${status.toLowerCase()} successfully`);
 });
