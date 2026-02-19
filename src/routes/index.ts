@@ -16,7 +16,7 @@ import { EmailLogRoutes } from '../modules/email-log/email-log.routes';
 import { FinanceRoutes } from '../modules/finance/finance.routes';
 
 const router = express.Router();
-console.log('✅ Main Router Module Loaded');
+console.log(' Main Router Module Loaded');
 
 const moduleRoutes = [
   {

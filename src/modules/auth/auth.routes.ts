@@ -5,7 +5,7 @@ import * as AuthValidator from './auth.validator';
 import { auth } from '../../middleware/auth.middleware';
 
 const router = express.Router();
-console.log('✅ Auth Routes Module Loaded');
+console.log(' Auth Routes Module Loaded');
 
 router.post(
   '/register/student',

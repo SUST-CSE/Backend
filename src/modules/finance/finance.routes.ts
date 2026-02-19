@@ -40,5 +40,5 @@ router.delete(
 // Mount Cost Routes
 router.use('/cost', CostRoutes);
 
-console.log('✅ Finance Routes Module Loaded');
+console.log(' Finance Routes Module Loaded');
 export const FinanceRoutes = router;

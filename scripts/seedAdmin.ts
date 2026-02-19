@@ -27,13 +27,13 @@ const seedAdmin = async () => {
     };
 
     await User.create(adminData);
-    console.log('✅ Admin user created successfully!');
+    console.log(' Admin user created successfully!');
     console.log('Email: admin@sust.edu');
     console.log('Password: adminpassword123');
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding admin:', error);
+    console.error(' Error seeding admin:', error);
     process.exit(1);
   }
 };

@@ -15,7 +15,7 @@ const downloadFile = (url: string): Promise<Buffer> => {
       if (response.statusCode !== 200) {
         return reject(new Error(`Failed to download: ${response.statusCode}`));
       }
-      
+
       const chunks: Buffer[] = [];
       response.on('data', (chunk) => chunks.push(chunk));
       response.on('end', () => resolve(Buffer.concat(chunks)));
@@ -51,10 +51,10 @@ const migratePDFAttachments = async () => {
 
       for (let i = 0; i < app.attachments.length; i++) {
         const url = app.attachments[i];
-        
+
         // Check if this is a PDF with wrong resource type (image/upload instead of raw/upload)
-        const isPDFWithWrongType = url.includes('/image/upload/') && 
-                                    (url.toLowerCase().endsWith('.pdf') || url.includes('.pdf'));
+        const isPDFWithWrongType = url.includes('/image/upload/') &&
+          (url.toLowerCase().endsWith('.pdf') || url.includes('.pdf'));
 
         if (isPDFWithWrongType) {
           console.log(`🔄 Migrating PDF for application: ${app.title}`);
@@ -73,7 +73,7 @@ const migratePDFAttachments = async () => {
             // Upload with correct resource_type: 'raw'
             const uploadResult = await new Promise<{ secure_url: string; public_id: string }>((resolve, reject) => {
               const uploadStream = cloudinary.uploader.upload_stream(
-                { 
+                {
                   folder: 'sust-cse/applications',
                   resource_type: 'raw'
                 },
@@ -98,13 +98,13 @@ const migratePDFAttachments = async () => {
             // Try to delete the old file (with image resource type)
             try {
               await cloudinary.uploader.destroy(oldPublicId, { resource_type: 'image' });
-              console.log(`   ✅ Deleted old file: ${oldPublicId}`);
+              console.log(`   Deleted old file: ${oldPublicId}`);
             } catch (deleteError) {
               console.log(`   ⚠️  Could not delete old file (may not exist): ${oldPublicId}`);
             }
 
           } catch (error: any) {
-            console.error(`   ❌ Error migrating attachment: ${error.message}`);
+            console.error(`    Error migrating attachment: ${error.message}`);
             // Keep the old URL if migration fails
             updatedAttachments.push(url);
             errorCount++;

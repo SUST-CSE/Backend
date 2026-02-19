@@ -9,8 +9,8 @@ import { NotFoundError } from './utils/errors';
 import { setupSwagger } from './config/swagger';
 import { connectDB } from './config/database';
 
-// Initialize DB (for serverless environments)
-connectDB();
+// // Initialize DB (for serverless environments)
+// connectDB();
 
 const app: Application = express();
 
