@@ -27,7 +27,7 @@ const applicationSchema = new Schema<IApplication>(
     signedPdfUrl: String,
     feedback: String,
     medium: { type: Schema.Types.ObjectId, ref: 'User' },
-    to: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    to: { type: Schema.Types.ObjectId, ref: 'User' }, // Assigned by admin after submission
     l0Reviewer: { type: Schema.Types.ObjectId, ref: 'User' },
     uniqueCode: { type: String, unique: true, sparse: true },
     approvalTrail: {

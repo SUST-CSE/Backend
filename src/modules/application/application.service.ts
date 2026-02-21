@@ -29,7 +29,7 @@ export const submitApplication = async (data: Partial<IApplication>) => {
       Buffer.from(pdfBuffer),
       'sust-cse/applications',
       'application/pdf',
-      `${data.title?.replace(/\s+/g, '_')}_application.pdf`
+      `${data.title?.replace(/\s+/g, '_')}_application`
     );
     signedPdfUrl = uploadResult.secure_url;
   } else if (data.submissionMode === 'PDF' && data.attachments?.length) {
@@ -81,7 +81,7 @@ export const getAllApplications = async (query: any = {}, user?: any) => {
     }
 
     if (orConditions.length > 0) {
-        filter.$or = orConditions;
+      filter.$or = orConditions;
     }
   }
 
@@ -94,8 +94,8 @@ export const getAllApplications = async (query: any = {}, user?: any) => {
 };
 
 export const getApplicationById = async (idOrCode: string) => {
-  const query = idOrCode.startsWith('APP-') 
-    ? { uniqueCode: idOrCode } 
+  const query = idOrCode.startsWith('APP-')
+    ? { uniqueCode: idOrCode }
     : { _id: idOrCode };
 
   const result = await Application.findOne(query)
@@ -106,7 +106,7 @@ export const getApplicationById = async (idOrCode: string) => {
     .populate('approvalTrail.l0.reviewer', 'name')
     .populate('approvalTrail.l1.reviewer', 'name')
     .populate('approvalTrail.l2.reviewer', 'name');
-    
+
   if (!result) throw new AppError('Application not found', 404);
   return result;
 };
@@ -120,10 +120,10 @@ const generateUniqueCode = async () => {
 };
 
 export const approveApplicationStage = async (
-  id: string, 
-  stage: 'l0' | 'l1' | 'l2', 
-  reviewerId: string, 
-  status: 'APPROVED' | 'REJECTED', 
+  id: string,
+  stage: 'l0' | 'l1' | 'l2',
+  reviewerId: string,
+  status: 'APPROVED' | 'REJECTED',
   feedback?: string
 ) => {
   const application = await Application.findById(id).populate('submittedBy', 'name email');
@@ -139,17 +139,18 @@ export const approveApplicationStage = async (
     // Stage-specific logic
     if (stage === 'l0') {
       application.approvalTrail.l0 = { status: 'APPROVED', date: new Date(), reviewer: reviewer._id as any, feedback };
-      application.status = ApplicationStatus.PENDING_L1;
+      // If no medium (L1) is set, skip directly to L2
+      application.status = application.medium ? ApplicationStatus.PENDING_L1 : ApplicationStatus.PENDING_L2;
     } else if (stage === 'l1') {
       if (!reviewer.signatureUrl) throw new AppError('Please set your digital signature in profile before approving', 400);
-      
+
       // Update trail
-      application.approvalTrail.l1 = { 
-        status: 'APPROVED', 
-        date: new Date(), 
-        reviewer: reviewer._id as any, 
-        signatureUrl: reviewer.signatureUrl, 
-        feedback 
+      application.approvalTrail.l1 = {
+        status: 'APPROVED',
+        date: new Date(),
+        reviewer: reviewer._id as any,
+        signatureUrl: reviewer.signatureUrl,
+        feedback
       };
 
       // Embed signature into PDF
@@ -163,7 +164,7 @@ export const approveApplicationStage = async (
           console.log(`🎬 Attempting to embed L1 signature into: ${application.signedPdfUrl}`);
           const pdfResponse = await axios.get(application.signedPdfUrl, { responseType: 'arraybuffer' });
           console.log(`✅ Downloaded PDF: ${pdfResponse.data.byteLength} bytes`);
-          
+
           const signedBuffer = await addSignatureToPDF(
             Buffer.from(pdfResponse.data),
             {
@@ -180,7 +181,7 @@ export const approveApplicationStage = async (
             Buffer.from(signedBuffer),
             'sust-cse/applications/signed',
             'application/pdf',
-            `signed_l1_${application._id}.pdf`
+            `signed_l1_${application._id}`
           );
           application.signedPdfUrl = uploadResult.secure_url;
           console.log(`🚀 Uploaded signed PDF to Cloudinary: ${application.signedPdfUrl}`);
@@ -193,13 +194,13 @@ export const approveApplicationStage = async (
       application.status = ApplicationStatus.PENDING_L2;
     } else if (stage === 'l2') {
       if (!reviewer.signatureUrl) throw new AppError('Please set your digital signature in profile before approving', 400);
-      
-      application.approvalTrail.l2 = { 
-        status: 'APPROVED', 
-        date: new Date(), 
-        reviewer: reviewer._id as any, 
-        signatureUrl: reviewer.signatureUrl, 
-        feedback 
+
+      application.approvalTrail.l2 = {
+        status: 'APPROVED',
+        date: new Date(),
+        reviewer: reviewer._id as any,
+        signatureUrl: reviewer.signatureUrl,
+        feedback
       };
 
       // Embed L2 signature into PDF
@@ -230,7 +231,7 @@ export const approveApplicationStage = async (
             Buffer.from(signedBuffer),
             'sust-cse/applications/signed',
             'application/pdf',
-            `signed_l2_${application._id}.pdf`
+            `signed_l2_${application._id}`
           );
           application.signedPdfUrl = uploadResult.secure_url;
           console.log(`🚀 Uploaded signed PDF to Cloudinary: ${application.signedPdfUrl}`);
@@ -267,7 +268,7 @@ export const updateApplicationStatus = async (id: string, updates: { status?: Ap
 
   if (updates.status) application.status = updates.status;
   if (updates.feedback) application.feedback = updates.feedback;
-  
+
   if (updates.l0Reviewer) application.l0Reviewer = updates.l0Reviewer as any;
   if (updates.medium) application.medium = updates.medium as any;
   if (updates.to) application.to = updates.to as any;

@@ -16,8 +16,22 @@ const app: Application = express();
 
 // Security middleware
 app.use(helmet());
+const allowedOrigins = [
+  env.CLIENT_URL,
+  'http://localhost:3000',
+  'http://192.168.0.107:3000',
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 

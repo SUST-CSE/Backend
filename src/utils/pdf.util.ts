@@ -64,21 +64,35 @@ export const generateApplicationPDF = async (data: {
   // Body
   const textLines = wrapText(data.description, 500, font, 11);
   let currentY = height - 180;
+  let currentPage = page;
+
   for (const line of textLines) {
-    page.drawText(line, {
+    if (currentY < 80) {
+      // Add new page
+      currentPage = pdfDoc.addPage([600, 850]);
+      currentY = 800; // Reset Y for new page
+    }
+
+    currentPage.drawText(line, {
       x: 50,
       y: currentY,
       size: 11,
       font: font,
     });
     currentY -= 15;
-    if (currentY < 100) break; // Simplified pagination for now
   }
 
-  // Footer / Student Info
-  page.drawText('Submitted By:', { x: 50, y: 100, size: 10, font: boldFont });
-  page.drawText(data.studentName, { x: 50, y: 85, size: 10, font: font });
-  page.drawText(`ID: ${data.studentId}`, { x: 50, y: 70, size: 10, font: font });
+  // Footer / Student Info on the same page (or next if no space)
+  if (currentY < 120) {
+    currentPage = pdfDoc.addPage([600, 850]);
+    currentY = 800;
+  } else {
+    currentY -= 30; // Extra spacing before footer
+  }
+
+  currentPage.drawText('Submitted By:', { x: 50, y: currentY, size: 10, font: boldFont });
+  currentPage.drawText(data.studentName, { x: 50, y: currentY - 15, size: 10, font: font });
+  currentPage.drawText(`ID: ${data.studentId}`, { x: 50, y: currentY - 30, size: 10, font: font });
 
   return await pdfDoc.save();
 };
@@ -102,11 +116,11 @@ export const addSignatureToPDF = async (
   const response = await axios.get(signatureData.url, { responseType: 'arraybuffer' });
   const sigImageBytes = response.data;
   console.log(`✅ Signature image downloaded: ${sigImageBytes.byteLength} bytes`);
-  
+
   // Robust image format detection
   let sigImage;
   const urlLower = signatureData.url.toLowerCase();
-  
+
   if (urlLower.includes('.png') || urlLower.includes('image/png')) {
     console.log('Detected PNG signature');
     sigImage = await pdfDoc.embedPng(sigImageBytes);
@@ -122,7 +136,7 @@ export const addSignatureToPDF = async (
 
   let page;
   const pageCount = pdfDoc.getPageCount();
-  
+
   // Logic: L1 always starts a new "Approval Page". L2 looks for it.
   if (level === 'l1') {
     page = pdfDoc.addPage([600, 400]); // Dedicated approval page
@@ -186,20 +200,31 @@ export const addSignatureToPDF = async (
 
 // Helper to wrap text
 function wrapText(text: string, maxWidth: number, font: any, fontSize: number): string[] {
-  const words = text.split(' ');
+  // Strip \r characters (Windows line endings) — pdf-lib cannot encode them
+  const cleanText = text.replace(/\r/g, '');
+  // Split by explicit newlines first, then wrap each paragraph
+  const paragraphs = cleanText.split('\n');
   const lines: string[] = [];
-  let currentLine = '';
 
-  for (const word of words) {
-    const testLine = currentLine ? currentLine + ' ' + word : word;
-    const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-    if (testWidth > maxWidth) {
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
+  for (const paragraph of paragraphs) {
+    if (paragraph.trim() === '') {
+      lines.push(''); // Preserve blank lines
+      continue;
     }
+    const words = paragraph.split(' ');
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine ? currentLine + ' ' + word : word;
+      const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+      if (testWidth > maxWidth) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    lines.push(currentLine);
   }
-  lines.push(currentLine);
   return lines;
 }

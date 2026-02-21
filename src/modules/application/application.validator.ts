@@ -5,9 +5,11 @@ export const submitApplicationSchema = z.object({
   title: z.string({ required_error: 'Title is required' }),
   description: z.string({ required_error: 'Description is required' }),
   type: z.nativeEnum(ApplicationType, { required_error: 'Application type is required' }),
+  submissionMode: z.enum(['PDF', 'TEXT']).optional(),
+  textContent: z.string().optional(),
   attachments: z.array(z.string()).optional(),
   medium: z.string().optional(),
-  to: z.string({ required_error: 'Recipient (To) is required' }),
+  to: z.string().optional(), // Admin assigns the final approver after submission
 });
 
 export const updateApplicationStatusSchema = z.object({

@@ -35,7 +35,7 @@ const envSchema = z.object({
   }),
   EMAIL_HOST: z.string().default('smtp.gmail.com'),
   EMAIL_PORT: z.string().default('587'),
-  CLIENT_URL: z.string().default('http://localhost:3000'),
+  CLIENT_URL: z.string().default("http://192.168.0.107:3000"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

@@ -46,3 +46,11 @@ export const deleteTransaction = asyncHandler(async (req: Request, res: Response
   await FinanceService.deleteTransaction(id as string);
   successResponse(res, null, 'Transaction deleted successfully');
 });
+
+export const adjustBalance = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as any).user._id;
+  const { newBalance, reason } = req.body;
+
+  const result = await FinanceService.adjustBalance(Number(newBalance), reason, userId);
+  successResponse(res, result, 'Balance adjusted successfully', 201);
+});

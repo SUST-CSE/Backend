@@ -3,7 +3,7 @@ import { auth } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validate.middleware';
 import * as FinanceController from './finance.controller';
 import { upload } from '../../middleware/upload.middleware';
-import { addTransactionSchema } from './finance.validator';
+import { addTransactionSchema, adjustBalanceSchema } from './finance.validator';
 
 import { CostRoutes } from './cost.routes';
 import { UserRole } from '../user/user.types';
@@ -35,6 +35,13 @@ router.delete(
   '/:id',
   auth([UserRole.ADMIN], [UserPermission.MANAGE_ACCOUNTS]),
   FinanceController.deleteTransaction
+);
+
+router.post(
+  '/adjust-balance',
+  auth([UserRole.ADMIN], [UserPermission.MANAGE_ACCOUNTS]),
+  validate(adjustBalanceSchema),
+  FinanceController.adjustBalance
 );
 
 // Mount Cost Routes

@@ -1,7 +1,8 @@
 import { Transaction } from './finance.schema';
 import { ITransaction } from './finance.interface';
-import { TransactionType } from './finance.types';
+import { TransactionCategory, TransactionType } from './finance.types';
 import { AppError } from '../../utils/errors';
+import { Types } from 'mongoose';
 
 export const addTransaction = async (data: Partial<ITransaction>) => {
   return await Transaction.create(data);
@@ -24,12 +25,12 @@ export const getTransactions = async (filter: any = {}) => {
 
 export const getFinancialSummary = async () => {
   const transactions = await Transaction.find({ isDeleted: false });
-  
+
   let totalIncome = 0;
   let totalExpense = 0;
   const categoryBreakdown: Record<string, { income: number; expense: number }> = {};
 
-  transactions.forEach((tx) => {
+  transactions.forEach((tx: ITransaction) => {
     if (!categoryBreakdown[tx.category]) {
       categoryBreakdown[tx.category] = { income: 0, expense: 0 };
     }
@@ -48,12 +49,12 @@ export const getFinancialSummary = async () => {
   // Monthly summary (current month)
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  
-  const monthlyTX = transactions.filter(tx => tx.date >= startOfMonth);
+
+  const monthlyTX = transactions.filter((tx: ITransaction) => tx.date >= startOfMonth);
   let monthlyIncome = 0;
   let monthlyExpense = 0;
 
-  monthlyTX.forEach(tx => {
+  monthlyTX.forEach((tx: ITransaction) => {
     if (tx.type === TransactionType.INCOME) monthlyIncome += tx.amount;
     else monthlyExpense += tx.amount;
   });
@@ -72,4 +73,30 @@ export const deleteTransaction = async (id: string) => {
   const result = await Transaction.findByIdAndUpdate(id, { isDeleted: true });
   if (!result) throw new AppError('Transaction not found', 404);
   return result;
+};
+
+export const adjustBalance = async (newBalance: number, reason: string, addedBy: string) => {
+  const summary = await getFinancialSummary();
+  const currentBalance = summary.balance;
+
+  if (currentBalance === newBalance) {
+    throw new AppError('New balance is currently identical to the old balance', 400);
+  }
+
+  const difference = newBalance - currentBalance;
+
+  // If difference is positive, we need to artificially inject INCOME
+  // If difference is negative, we need to artificially inject EXPENSE (absolute value)
+  const isIncome = difference > 0;
+
+  const adjustmentTransaction: Partial<ITransaction> = {
+    title: `Manual Balance Adjustment: ${reason}`,
+    description: `Manually adjusted balance from ${currentBalance} to ${newBalance}. Difference: ${difference}. Reason: ${reason}`,
+    amount: Math.abs(difference),
+    type: isIncome ? TransactionType.INCOME : TransactionType.EXPENSE,
+    category: TransactionCategory.BALANCE_ADJUSTMENT,
+    date: new Date(),
+  };
+
+  return await addTransaction({ ...adjustmentTransaction, addedBy: new Types.ObjectId(addedBy) as any });
 };
