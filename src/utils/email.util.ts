@@ -3,19 +3,35 @@ import { env } from '../config/env';
 import { EmailLog } from '../modules/email-log/email-log.schema';
 
 // Create reusable transporter using dynamic SMTP config
+// For local development, we allow missing credentials to prevent crashes
 const transporter = nodemailer.createTransport({
-  host: env.EMAIL_HOST,
-  port: parseInt(env.EMAIL_PORT),
+  host: env.EMAIL_HOST || 'smtp.gmail.com',
+  port: parseInt(env.EMAIL_PORT || '587'),
   secure: env.EMAIL_PORT === '465', // true for 465, false for 587 (STARTTLS)
   auth: {
-    user: env.EMAIL_USER,
-    pass: env.EMAIL_PASS.replace(/\s/g, ''), // Remove any spaces from app password
+    user: env.EMAIL_USER || '',
+    pass: (env.EMAIL_PASS || '').replace(/\s/g, ''), // Remove any spaces from app password
   },
 });
 
 export const sendVerificationEmail = async (email: string, code: string) => {
   const subject = 'Verify your SUST CSE Dashboard Account';
   const type = 'VERIFICATION';
+
+  // Always log code to terminal in development for easier testing
+  if (env.NODE_ENV === 'development') {
+    console.log('\n-----------------------------------------');
+    console.log(`📧 [DEV] ${type} EMAIL`);
+    console.log(`To: ${email}`);
+    console.log(`Code: ${code}`);
+    console.log('-----------------------------------------\n');
+  }
+
+  // If credentials are missing, we stop here in dev
+  if (env.NODE_ENV === 'development' && (!env.EMAIL_USER || !env.EMAIL_PASS)) {
+    return;
+  }
+
   try {
     const info = await transporter.sendMail({
       from: `"SUST CSE Dashboard" <${env.EMAIL_USER}>`,
@@ -61,6 +77,11 @@ export const sendVerificationEmail = async (email: string, code: string) => {
       error: err.message,
       sentAt: new Date(),
     });
+    // In dev, we don't want to crash/stop registration if email fails
+    if (env.NODE_ENV === 'development') {
+      console.warn('⚠️ Verification email failed to send, but proceeding due to DEV mode.');
+      return;
+    }
     throw new Error('Failed to send verification email');
   }
 };
@@ -68,6 +89,21 @@ export const sendVerificationEmail = async (email: string, code: string) => {
 export const sendPasswordResetEmail = async (email: string, code: string) => {
   const subject = 'Password Reset Code - SUST CSE Dashboard';
   const type = 'PASSWORD_RESET';
+
+  // Always log code to terminal in development
+  if (env.NODE_ENV === 'development') {
+    console.log('\n-----------------------------------------');
+    console.log(`📧 [DEV] ${type} EMAIL`);
+    console.log(`To: ${email}`);
+    console.log(`Reset Code: ${code}`);
+    console.log('-----------------------------------------\n');
+  }
+
+  // If credentials are missing, we stop here in dev
+  if (env.NODE_ENV === 'development' && (!env.EMAIL_USER || !env.EMAIL_PASS)) {
+    return;
+  }
+
   try {
     const info = await transporter.sendMail({
       from: `"SUST CSE Dashboard" <${env.EMAIL_USER}>`,
@@ -113,11 +149,26 @@ export const sendPasswordResetEmail = async (email: string, code: string) => {
       error: err.message,
       sentAt: new Date(),
     });
+    // In dev, we don't want to crash/stop flow if email fails
+    if (env.NODE_ENV === 'development') {
+      console.warn('⚠️ Password reset email failed to send, but proceeding due to DEV mode.');
+      return;
+    }
     throw new Error('Failed to send password reset email');
   }
 };
 
 export const sendEmail = async ({ to, subject, html, type = 'GENERAL' }: { to: string; subject: string; html: string; type?: string }) => {
+  // If in development and no email credentials, just log the email to console
+  if (env.NODE_ENV === 'development' && (!env.EMAIL_USER || !env.EMAIL_PASS)) {
+    console.log('\n-----------------------------------------');
+    console.log('📧 DEVELOPMENT MODE: GENERAL EMAIL');
+    console.log(`To: ${to}`);
+    console.log(`Subject: ${subject}`);
+    console.log('-----------------------------------------\n');
+    return;
+  }
+
   try {
     const info = await transporter.sendMail({
       from: `"SUST CSE Department" <${env.EMAIL_USER}>`,
@@ -145,6 +196,11 @@ export const sendEmail = async ({ to, subject, html, type = 'GENERAL' }: { to: s
       error: error.message,
       sentAt: new Date(),
     });
+    // In dev, we don't want to crash/stop flow if email fails
+    if (env.NODE_ENV === 'development') {
+      console.warn('⚠️ Email failed to send, but proceeding due to DEV mode.');
+      return;
+    }
     throw error;
   }
 };

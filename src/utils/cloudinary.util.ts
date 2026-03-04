@@ -1,4 +1,5 @@
 import cloudinary from '../config/cloudinary';
+// FORCE RELOAD V4 - ENSURING RAW RESOURCE TYPE
 import { AppError } from './errors/AppError';
 
 export const uploadToCloudinary = async (
@@ -20,30 +21,30 @@ export const uploadToCloudinary = async (
   }
 
   // Determine resource type based on MIME type
-  let resourceType: 'auto' | 'image' | 'raw' = 'auto';
-  // For PDFs, 'image' resource_type is actually better in Cloudinary
-  // as it provides proper headers for browser preview and allows transformations.
-  if (file.mimetype === 'application/pdf' || file.originalname?.toLowerCase().endsWith('.pdf')) {
-    resourceType = 'image';
-    console.log('📄 Detected PDF - using resource_type: image');
+  let resourceType: 'auto' | 'image' | 'video' | 'raw' = 'auto';
+  const isPDF = file.mimetype === 'application/pdf' || file.originalname?.toLowerCase().endsWith('.pdf');
+
+  if (isPDF) {
+    resourceType = 'raw';
+    console.log('📄 Detected PDF - using resource_type: raw');
   } else if (file.mimetype?.startsWith('image/')) {
     resourceType = 'image';
-    console.log('🖼️ Detected image - using resource_type: image');
   }
 
   // Build upload options
   const uploadOptions: any = { folder, resource_type: resourceType };
 
-  // Include filename as public_id so URL has proper extension (critical for PDFs)
   if (file.originalname) {
     let publicId = file.originalname
       .replace(/\.[^/.]+$/, "") // Remove original extension
       .replace(/\s+/g, '_');    // Replace spaces with underscores
 
-    uploadOptions.public_id = publicId;
-    if (file.mimetype === 'application/pdf' || file.originalname.toLowerCase().endsWith('.pdf')) {
-      uploadOptions.format = 'pdf';
+    // For raw files (like PDFs), the extension must be part of the public_id
+    if (isPDF) {
+      publicId += '.pdf';
     }
+
+    uploadOptions.public_id = publicId;
   }
 
   console.log('🚀 Final Cloudinary Upload Options:', uploadOptions);
@@ -76,25 +77,31 @@ export const uploadBufferToCloudinary = async (
   mimetype: string,
   filename?: string
 ): Promise<{ secure_url: string; public_id: string; format?: string }> => {
-  let resourceType: 'auto' | 'image' | 'raw' = 'auto';
-  if (mimetype === 'application/pdf' || filename?.toLowerCase().endsWith('.pdf')) {
-    resourceType = 'image'; // Use 'image' for PDFs to get proper preview support
+  // Determine resource type based on MIME type
+  let resourceType: 'auto' | 'image' | 'video' | 'raw' = 'auto';
+  const isPDF = mimetype === 'application/pdf' || filename?.toLowerCase().endsWith('.pdf');
+
+  if (isPDF) {
+    resourceType = 'raw';
+    console.log('📄 Detected PDF - using resource_type: raw');
   } else if (mimetype?.startsWith('image/')) {
     resourceType = 'image';
   }
 
   // Build upload options
   const uploadOptions: any = { folder, resource_type: resourceType };
-  // Include filename as public_id so URL has proper extension (critical for PDFs)
+
   if (filename) {
     let publicId = filename
       .replace(/\.[^/.]+$/, "") // Remove original extension if present
       .replace(/\s+/g, '_');    // Replace spaces with underscores
 
-    uploadOptions.public_id = publicId;
-    if (mimetype === 'application/pdf' || filename.toLowerCase().endsWith('.pdf')) {
-      uploadOptions.format = 'pdf';
+    // For raw files (like PDFs), the extension must be part of the public_id
+    if (isPDF) {
+      publicId += '.pdf';
     }
+
+    uploadOptions.public_id = publicId;
   }
 
   console.log('🚀 Final Cloudinary (Buffer) Upload Options:', uploadOptions);

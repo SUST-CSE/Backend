@@ -1,5 +1,7 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 export interface SignatureData {
   url: string;
@@ -24,50 +26,107 @@ export const generateApplicationPDF = async (data: {
   const { width, height } = page.getSize();
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const timesFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
 
-  // Header
-  page.drawText('Department of Computer Science and Engineering', {
-    x: 50,
-    y: height - 50,
-    size: 18,
+  // Embed SUST Logo
+  try {
+    const logoPath = '/media/ridoy-pc/New Volume/CSE Society/Frontend/public/sust.png';
+    if (fs.existsSync(logoPath)) {
+      const logoBytes = fs.readFileSync(logoPath);
+      const logoImage = await pdfDoc.embedPng(logoBytes);
+      const logoDims = logoImage.scale(0.12);
+      page.drawImage(logoImage, {
+        x: 50,
+        y: height - 90,
+        width: logoDims.width,
+        height: logoDims.height,
+      });
+    }
+  } catch (err) {
+    console.error('Error embedding logo in PDF:', err);
+  }
+
+  // Header - Centered Department Text
+  const deptText = 'Department of Computer Science and Engineering';
+  const deptWidth = boldFont.widthOfTextAtSize(deptText, 16);
+  page.drawText(deptText, {
+    x: (width - deptWidth) / 2 + 20, // Offset for logo
+    y: height - 55,
+    size: 16,
     font: boldFont,
     color: rgb(0, 0.13, 0.28), // #002147
   });
-  page.drawText('Shahjalal University of Science and Technology, Sylhet', {
-    x: 50,
-    y: height - 70,
-    size: 12,
+
+  const uniText = 'Shahjalal University of Science and Technology, Sylhet';
+  const uniWidth = font.widthOfTextAtSize(uniText, 11);
+  page.drawText(uniText, {
+    x: (width - uniWidth) / 2 + 20,
+    y: height - 72,
+    size: 11,
     font: font,
-  });
-  page.drawLine({
-    start: { x: 50, y: height - 85 },
-    end: { x: width - 50, y: height - 85 },
-    thickness: 2,
     color: rgb(0, 0.13, 0.28),
   });
 
-  // Date and Title
-  page.drawText(`Date: ${data.date.toLocaleDateString()}`, {
-    x: width - 150,
-    y: height - 110,
-    size: 10,
+  const docLabel = 'Official Application Document';
+  const docWidth = font.widthOfTextAtSize(docLabel, 9);
+  page.drawText(docLabel, {
+    x: (width - docWidth) / 2 + 20,
+    y: height - 85,
+    size: 9,
+    font: font,
+    color: rgb(0.4, 0.4, 0.4),
+  });
+
+  page.drawLine({
+    start: { x: 50, y: height - 100 },
+    end: { x: width - 50, y: height - 100 },
+    thickness: 1.5,
+    color: rgb(0, 0.13, 0.28),
+  });
+
+  // Date (Right Aligned)
+  const dateStr = `Date: ${data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  const dateWidth = font.widthOfTextAtSize(dateStr, 11);
+  page.drawText(dateStr, {
+    x: width - 50 - dateWidth,
+    y: height - 130,
+    size: 11,
     font: font,
   });
 
-  page.drawText(data.title.toUpperCase(), {
+  // Recipient Block
+  page.drawText('To,', { x: 50, y: height - 160, size: 11, font: font });
+  page.drawText('The Head of the Department,', { x: 50, y: height - 175, size: 11, font: boldFont });
+  page.drawText('Department of Computer Science and Engineering,', { x: 50, y: height - 190, size: 11, font: font });
+  page.drawText('SUST, Sylhet-3114.', { x: 50, y: height - 205, size: 11, font: font });
+
+  // Subject (Bold and Underlined)
+  const subjectText = `Subject: ${data.title}`;
+  page.drawText(subjectText, {
     x: 50,
-    y: height - 150,
-    size: 14,
+    y: height - 235,
+    size: 12,
     font: boldFont,
   });
+  const subjectWidth = boldFont.widthOfTextAtSize(subjectText, 12);
+  page.drawLine({
+    start: { x: 50, y: height - 238 },
+    end: { x: 50 + subjectWidth, y: height - 238 },
+    thickness: 1,
+  });
 
-  // Body
-  const textLines = wrapText(data.description, 500, font, 11);
-  let currentY = height - 180;
+  // Salutation
+  page.drawText('Sir/Madam,', { x: 50, y: height - 265, size: 11, font: font });
+
+  // Body Content (Times Roman for professional look)
+  const bodyText = data.description || '';
+  const bodyLines = wrapText(bodyText, 500, timesFont, 11);
+  let currentY = height - 290;
   let currentPage = page;
 
-  for (const line of textLines) {
-    if (currentY < 80) {
+  for (const line of bodyLines) {
+    if (currentY < 120) {
       // Add new page
       currentPage = pdfDoc.addPage([600, 850]);
       currentY = 800; // Reset Y for new page
@@ -77,22 +136,43 @@ export const generateApplicationPDF = async (data: {
       x: 50,
       y: currentY,
       size: 11,
-      font: font,
+      font: timesFont,
     });
-    currentY -= 15;
+    currentY -= 18;
   }
 
-  // Footer / Student Info on the same page (or next if no space)
-  if (currentY < 120) {
+  // Footer / Student Info
+  if (currentY < 150) {
     currentPage = pdfDoc.addPage([600, 850]);
     currentY = 800;
   } else {
-    currentY -= 30; // Extra spacing before footer
+    currentY -= 40; // Extra spacing before footer
   }
 
-  currentPage.drawText('Submitted By:', { x: 50, y: currentY, size: 10, font: boldFont });
-  currentPage.drawText(data.studentName, { x: 50, y: currentY - 15, size: 10, font: font });
-  currentPage.drawText(`ID: ${data.studentId}`, { x: 50, y: currentY - 30, size: 10, font: font });
+  currentPage.drawText('Yours faithfully,', { x: 50, y: currentY, size: 11, font: timesFont });
+  currentY -= 35;
+  currentPage.drawText(data.studentName, { x: 50, y: currentY, size: 11, font: timesBold });
+  currentPage.drawText(`ID: ${data.studentId}`, { x: 50, y: currentY - 15, size: 11, font: timesFont });
+  currentPage.drawText(`Dept. of CSE, SUST.`, { x: 50, y: currentY - 30, size: 11, font: timesFont });
+
+  // Add a placeholder for digital signatures
+  currentPage.drawLine({
+    start: { x: 50, y: 80 },
+    end: { x: width - 50, y: 80 },
+    thickness: 0.5,
+    color: rgb(0.8, 0.8, 0.8),
+    dashArray: [2, 2],
+  });
+
+  const signatureNote = 'Digital signatures will be appended here upon official approval.';
+  const noteWidth = font.widthOfTextAtSize(signatureNote, 8);
+  currentPage.drawText(signatureNote, {
+    x: (width - noteWidth) / 2,
+    y: 65,
+    size: 8,
+    font: font,
+    color: rgb(0.6, 0.6, 0.6),
+  });
 
   return await pdfDoc.save();
 };

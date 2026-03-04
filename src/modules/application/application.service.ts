@@ -62,17 +62,26 @@ export const getAllApplications = async (query: any = {}, user?: any) => {
 
   if (user && user.role !== 'ADMIN' && !user.permissions?.includes('MANAGE_APPLICATIONS')) {
     const orConditions: any[] = [
-      { l0Reviewer: user._id },
-      { medium: user._id },
-      { to: user._id },
+      // Show if user is the explicit L0 Reviewer and it's L0 stage
+      { l0Reviewer: user._id, status: ApplicationStatus.PENDING_L0 },
+      // Show if user is the Reference Person (Medium) and it's L1 stage
+      { medium: user._id, status: ApplicationStatus.PENDING_L1 },
+      // Show if user is the HOD (To) and it's L2 stage
+      { to: user._id, status: ApplicationStatus.PENDING_L2 },
+
+      // Also show applications they have already reviewed (History)
       { 'approvalTrail.l0.reviewer': user._id },
       { 'approvalTrail.l1.reviewer': user._id },
       { 'approvalTrail.l2.reviewer': user._id }
     ];
 
+    // Broad permissions for generic staff
     if (user.permissions?.includes('APPROVE_APPLICATION_L0')) {
       orConditions.push({ status: ApplicationStatus.PENDING_L0 });
     }
+
+    // Note: L1 and L2 are typically specifically assigned (medium/to), 
+    // but if they have broad permissions, they can see all at that stage
     if (user.permissions?.includes('APPROVE_APPLICATION_L1')) {
       orConditions.push({ status: ApplicationStatus.PENDING_L1 });
     }
