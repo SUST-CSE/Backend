@@ -6,6 +6,7 @@ import { upload } from '../../middleware/upload.middleware';
 import { addTransactionSchema, adjustBalanceSchema } from './finance.validator';
 
 import { CostRoutes } from './cost.routes';
+import { StatementRoutes } from './statement.routes';
 import { UserRole } from '../user/user.types';
 import { UserPermission } from '../user/user.interface';
 
@@ -46,6 +47,9 @@ router.post(
 
 // Mount Cost Routes
 router.use('/cost', CostRoutes);
+
+// Mount Statement Routes
+router.use('/statements', StatementRoutes);
 
 console.log(' Finance Routes Module Loaded');
 export const FinanceRoutes = router;
