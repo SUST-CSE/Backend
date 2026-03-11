@@ -18,6 +18,7 @@ router.post(
   '/',
   auth(),
   upload.single('image'),
+  validate(createBlogSchema),
   BlogController.createBlog
 );
 

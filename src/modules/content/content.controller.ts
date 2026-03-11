@@ -73,6 +73,15 @@ export const getAchievementById = asyncHandler(async (req: Request, res: Respons
   successResponse(res, result, 'Achievement details fetched successfully');
 });
 
+export const updateAchievement = asyncHandler(async (req: Request, res: Response) => {
+  const result = await ContentService.updateAchievement(
+    req.params.id as string,
+    req.body,
+    (req.files as Express.Multer.File[]) || []
+  );
+  successResponse(res, result, 'Achievement updated successfully');
+});
+
 // Admin Messenger
 export const sendMessage = asyncHandler(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;

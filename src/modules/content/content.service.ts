@@ -216,6 +216,20 @@ export const getAchievementById = async (id: string) => {
   return Achievement.findById(id);
 };
 
+export const updateAchievement = async (id: string, data: any, files: Express.Multer.File[]) => {
+  const achievement = await Achievement.findById(id);
+  if (!achievement) throw new NotFoundError('Achievement not found');
+
+  const updateData = { ...data };
+
+  if (files && files.length > 0) {
+    const { secure_url } = await uploadToCloudinary(files[0], 'sust-cse/achievements');
+    updateData.image = secure_url;
+  }
+
+  return await Achievement.findByIdAndUpdate(id, updateData, { new: true });
+};
+
 // Admin Messenger Logic
 export const sendMessage = async (
   data: { title: string; content: string; target: string; methods: string[] },

@@ -51,6 +51,12 @@ router.post(
   validate(achievementSchema),
   ContentController.createAchievement
 );
+router.patch(
+  '/achievements/:id',
+  auth([UserRole.ADMIN, UserRole.TEACHER], [UserPermission.MANAGE_ACHIEVEMENTS]),
+  upload.array('images', 5),
+  ContentController.updateAchievement
+);
 router.delete(
   '/achievements/:id',
   auth([UserRole.ADMIN], [UserPermission.MANAGE_ACHIEVEMENTS, UserPermission.MANAGE_CONTENT]),

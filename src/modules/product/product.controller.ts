@@ -9,6 +9,12 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   successResponse(res, result, 'Products fetched successfully');
 });
 
+// Get product by ID (public)
+export const getProductById = asyncHandler(async (req: Request, res: Response) => {
+  const result = await ProductService.getProductById(req.params.id as string);
+  successResponse(res, result, 'Product fetched successfully');
+});
+
 // Get all products for admin
 export const getProductsAdmin = asyncHandler(async (req: Request, res: Response) => {
   const result = await ProductService.getAllProductsAdmin();

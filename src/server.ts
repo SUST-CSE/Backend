@@ -3,8 +3,8 @@ import { env } from './config/env';
 import { connectDB } from './config/database';
 import { seedAdmin } from './utils/seedAdmin.util';
 
-import dns from "node:dns/promises";
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+import dns from 'node:dns';
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
 
 
 const startServer = async () => {

@@ -11,7 +11,6 @@ import { BlogRoutes } from '../modules/blog/blog.routes';
 import { AlumniRoutes } from '../modules/alumni/alumni.routes';
 import { ProductRoutes } from '../modules/product/product.routes';
 import { WorkAssignmentRoutes } from '../modules/work-assignment/work-assignment.routes';
-import { ApplicationRoutes } from '../modules/application/application.routes';
 import { EmailLogRoutes } from '../modules/email-log/email-log.routes';
 import { FinanceRoutes } from '../modules/finance/finance.routes';
 
@@ -66,10 +65,6 @@ const moduleRoutes = [
   {
     path: '/work-assignments',
     route: WorkAssignmentRoutes,
-  },
-  {
-    path: '/applications',
-    route: ApplicationRoutes,
   },
   {
     path: '/email-logs',

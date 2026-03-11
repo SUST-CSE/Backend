@@ -10,6 +10,13 @@ export const getAllProducts = async () => {
     .lean();
 };
 
+// Get product by ID
+export const getProductById = async (id: string) => {
+  const product = await Product.findOne({ _id: id, isDeleted: false }).lean();
+  if (!product) throw new NotFoundError('Product not found');
+  return product;
+};
+
 // Get all products for admin (including inactive)
 export const getAllProductsAdmin = async () => {
   return await Product.find({ isDeleted: false })
